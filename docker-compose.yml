@@ -1,0 +1,82 @@
+version: "3.7"
+
+services:
+  biweb:
+    image: biweb
+    build:
+      context: ./bi-web
+      args:
+        HOST_USER_ID: ${USER_ID:-0}
+        HOST_USER_GROUP: ${GROUP_ID:-0}
+    container_name: biweb
+    depends_on:
+      - biwaf
+      - biapi-dev
+    volumes:
+      - type: bind
+        source: ./bi-web/src
+        target: /home/host/biweb/src/
+      - type: bind
+        source: ./bi-web/task
+        target: /home/host/biweb/task/
+      - type: bind
+        source: ./bi-web/tests
+        target: /home/host/biweb/tests/
+      - type: bind
+        source: ./bi-web/public
+        target: /home/host/biweb/public/
+    ports:
+      - 8080:8080
+    networks:
+      backend:
+  biapi-dev:
+    container_name: biapi
+    build:
+      context: ./bi-api
+    depends_on:
+      - bidb
+    volumes:
+      - type: bind
+        source: ./bi-api/src
+        target: /biapi/src/
+    environment:
+      PROFILE: 'dev'
+    ports:
+      - 8081:8081
+    networks:
+      backend:
+  bidb: 
+    image: postgres:11.4
+    environment:
+      POSTGRES_DB: 'bidb'
+      POSTGRES_PASSWORD: 'postgres'
+    container_name: bidb
+    ports:
+      - 5432:5432
+    volumes:
+      - biapi_data
+    networks:
+      backend:
+        aliases:
+          - dbserver  
+  biwaf:
+    image: franbuehler/modsecurity-crs-rp
+    container_name: waf
+    environment:
+      - PORT=8001
+      - BACKEND=http://biweb:8080
+      - PARANOIA=1
+      - ANOMALYIN=5
+      - ANOMALYOUT=4
+    ports:
+      - 8082:8001
+    networks:
+      backend:
+
+networks:
+  backend:
+
+
+volumes:
+  biapi_data:
+    name: biapi_data
