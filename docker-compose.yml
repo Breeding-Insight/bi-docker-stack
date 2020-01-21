@@ -28,6 +28,7 @@ services:
     ports:
       - 8080:8080
     networks:
+      upstream:
       backend:
   biapi-dev:
     container_name: biapi
@@ -45,6 +46,7 @@ services:
       - 8081:8081
     networks:
       backend:
+      protected:
   bidb: 
     image: postgres:11.4
     environment:
@@ -56,7 +58,7 @@ services:
     volumes:
       - biapi_data
     networks:
-      backend:
+      protected:
         aliases:
           - dbserver  
   biwaf:
@@ -71,11 +73,14 @@ services:
     ports:
       - 8082:8001
     networks:
-      backend:
+      frontend:
+      upstream:
 
 networks:
+  frontend:
+  upstream:
   backend:
-
+  protected:
 
 volumes:
   biapi_data:
