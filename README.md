@@ -3,14 +3,12 @@ Docker and  Docker-compose are both required.
 
 Cloning this repo wil create empty folders for two git submodules: bi-api and
 bi-web.  The source code for these submodules must be pulled by first updating
-the local .git/config with the mapping from the .gitmodules file in this repo.
+the local .git/config with the mapping from the .gitmodules file in this repo 
+and fetching the data as well. 
 ```
-git submodule init
+git submodule update --init --recursive
 ```
-Then fetch all the data from the submodules.
-```
-git submodule update
-```
+
 The docker-compose.yml should contain a service for each environment the API is
 to be run in: e.g develop, test, staging, and production.  Each service contains
 under the environment key public values for environment variables used as params
