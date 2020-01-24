@@ -32,6 +32,7 @@ services:
       backend:
   biapi-dev:
     container_name: biapi
+    image: biapi
     build:
       context: ./bi-api
       args:
@@ -41,15 +42,18 @@ services:
       - bidb
     volumes:
       - type: bind
-        source: ./bi-api/src
-        target: /biapi/src/
+        source: ./bi-api/
+        target: /biapi/
     environment:
       - API_INTERNAL_PORT=8081
-      - OAUTH_CLIENT_ID=APP-ZX6M8LSAN3YIIAQ5
+      - OAUTH_CLIENT_ID=${OAUTH_CLIENT_ID}
       - JWT_DOMAIN=localhost
       - DB_SERVER=dbserver:5432
       - DB_NAME=bidb
       - DB_USERNAME=postgres
+      - DB_PASSWORD=${DB_PASSWORD}
+      - JWT_SECRET=${JWT_SECRET}
+      - OAUTH_CLIENT_SECRET=${OAUTH_CLIENT_SECRET}
     ports:
       - 8081:8081
     networks:
@@ -59,7 +63,7 @@ services:
     image: postgres:11.4
     environment:
       - POSTGRES_DB=bidb
-      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
     container_name: bidb
     ports:
       - 5432:5432
