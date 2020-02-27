@@ -1,6 +1,6 @@
 [submodule "bi-web"]
 	path = bi-web
-	url = https://dmeidlin@bitbucket.org/breedinginsight/bi-web.git
+	url = https://github.com/Breeding-Insight/bi-web
 [submodule "bi-api"]
 	path = bi-api
-	url = https://dmeidlin@bitbucket.org/breedinginsight/bi-api.git
+	url = https://github.com/Breeding-Insight/bi-api

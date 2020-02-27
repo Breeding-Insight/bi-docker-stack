@@ -40,7 +40,16 @@ services:
         source: ./bi-api/src
         target: /biapi/src/
     environment:
-      PROFILE: 'dev'
+      - PROFILE=dev
+      - DB_SERVER=dbserver:5432
+      - DB_NAME=bidb
+      - DB_USER=postgres
+      - DB_PASSWORD=${DB_PASSWORD}
+      - API_INTERNAL_PORT=8081
+      - OAUTH_CLIENT_ID=${OAUTH_CLIENT_ID}
+      - JWT_DOMAIN=localhost
+      - JWT_SECRET=${JWT_SECRET}
+      - OAUTH_CLIENT_SECRET=${OAUTH_CLIENT_SECRET}
     ports:
       - 8081:8081
     networks:
