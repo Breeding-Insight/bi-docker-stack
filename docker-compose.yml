@@ -40,10 +40,21 @@ services:
         HOST_GROUP_ID: ${GROUP_ID:-0}
     depends_on:
       - bidb
+      - brapi-server
     volumes:
       - type: bind
         source: ./bi-api/
         target: /biapi/
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+      - type: bind
+        source: /usr/bin/docker
+        target: /usr/bin/docker
+      - type: bind
+        source: ${HOME}/.m2
+        target: /home/host/.m2
+        # target: /root/.m2
     environment:
       - API_INTERNAL_PORT=8081
       - OAUTH_CLIENT_ID=${OAUTH_CLIENT_ID}
@@ -54,13 +65,41 @@ services:
       - DB_PASSWORD=${DB_PASSWORD}
       - JWT_SECRET=${JWT_SECRET}
       - OAUTH_CLIENT_SECRET=${OAUTH_CLIENT_SECRET}
+      - GITHUB_ACTOR=${GITHUB_ACTOR}
+      - GITHUB_TOKEN=${GITHUB_TOKEN}
+      - BRAPI_CORE_URL=${BRAPI_CORE_URL}
+      - BRAPI_PHENO_URL=${BRAPI_PHENO_URL}
+      - BRAPI_GENO_URL=${BRAPI_GENO_URL}
+      - BRAPI_REFERENCE_SOURCE=${BRAPI_REFERENCE_SOURCE}
     ports:
       - 8081:8081
     networks:
       backend:
       protected:
+  brapi-server:
+    image: breedinginsight/brapi-java-server
+    container_name: brapi-server
+    depends_on:
+      - bidb
+    environment:
+      - BRAPI_DB_SERVER=${BRAPI_DB_SERVER}
+      - BRAPI_DB=${BRAPI_DB}
+      - BRAPI_DB_USER=${BRAPI_DB_USER}
+      - BRAPI_DB_PASSWORD=${BRAPI_DB_PASSWORD}
+    ports:
+      - ${BRAPI_SERVER_PORT}:8080
+    volumes:
+      - ./bi-api/src/main/resources/brapi/properties/application.properties:/home/brapi/properties/application.properties
+      - ./bi-api/src/main/resources/brapi/sql/:/home/brapi/sql/
+    networks:
+      protected:
+        aliases:
+          - brapiserver
+      backend:
+        aliases:
+          - brapiserver
   bidb: 
-    image: postgres:11.4
+    image: postgis/postgis:12-3.0
     environment:
       - POSTGRES_DB=bidb
       - POSTGRES_PASSWORD=${DB_PASSWORD}
