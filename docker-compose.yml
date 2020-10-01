@@ -125,8 +125,25 @@ services:
       - 8082:8001
     networks:
       frontend:
+        aliases:
+          - waf
       upstream:
-
+  biproxy:
+    container_name: biproxy    
+    image: biproxy
+    build:
+      dockerfile: biproxy.docker
+      context: ./proxy
+      args:
+        - REGISTERED_DOMAIN=${REGISTERED_DOMAIN:-localhost}
+        - WAF_IP=biwaf:8001
+    depends_on:
+      - biwaf
+    ports:
+      - 8087:80
+    networks:
+      frontend:
+      
 networks:
   frontend:
   upstream:
