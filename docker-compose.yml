@@ -34,7 +34,6 @@ services:
       - DB_NAME=bidb
       - DB_USER=postgres
       - DB_PASSWORD=${DB_PASSWORD}
-      - API_INTERNAL_PORT=8081
       - OAUTH_CLIENT_ID=${OAUTH_CLIENT_ID}
       - JWT_DOMAIN=${JWT_DOMAIN:-localhost}
       - JWT_SECRET=${JWT_SECRET}
@@ -45,6 +44,7 @@ services:
       - BRAPI_PHENO_URL=${BRAPI_PHENO_URL}
       - BRAPI_GENO_URL=${BRAPI_GENO_URL}
       - BRAPI_REFERENCE_SOURCE=${BRAPI_REFERENCE_SOURCE}
+      - WEB_BASE_URL=${WEB_BASE_URL}
     ports:
       - 8081:8081
     networks:
@@ -98,7 +98,7 @@ services:
       - ANOMALYIN=5
       - ANOMALYOUT=4
     ports:
-      - 8080:8001
+      - 80:8001
     networks:
       frontend:
       upstream:
