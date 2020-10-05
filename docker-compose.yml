@@ -130,27 +130,21 @@ services:
       upstream:
   biproxy:
     container_name: biproxy    
-    image: nginx
+    image: biproxy
+    build:
+      dockerfile: biproxy.docker
+      context: ./proxy
+      args:
+        - REGISTERED_DOMAIN=${REGISTERED_DOMAIN:-localhost}
+        - WAF_IP=biwaf:8001
     depends_on:
       - biwaf
     ports:
       - 80:80
       - 443:443
-    volumes:
-      - ./data/nginx:/etc/nginx/conf.d
-      - ./data/certbot/conf:/etc/letsencrypt
-      - ./data/certbot/www:/var/www/certbot
-    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
     networks:
       frontend:
-  certbot:
-    image: certbot/certbot
-    volumes:
-      - ./data/certbot/conf:/etc/letsencrypt
-      - ./data/certbot/www:/var/www/certbot
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
-    networks:
-      frontend:
+      
 networks:
   frontend:
   upstream:

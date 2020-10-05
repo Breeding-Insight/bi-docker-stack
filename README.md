@@ -53,3 +53,16 @@ API image and the docker-compose.yml to run the container.
 docker-compose up -d biapi-dev
 ```
 
+## TLS Support
+In a deployment environment TLS support can be easily provided by the reverse
+proxy which already has Certbot by LetsEncrypt installed. The deployment
+environment should set the value of the environment variable `REGISTERED_DOMAIN`
+to the value of the registered domain for deployed instance.
+
+Bash into the docker container named `biproxy` and call Certbot.
+```
+docker exec -it biproxy bash
+certbot -d <REGISTERED_DOMAIN>
+```
+Certbot will ask a series of questions to be answered interactively, then 
+automatically install the TLS certs and update the nginx config files.
