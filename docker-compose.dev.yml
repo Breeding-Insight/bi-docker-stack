@@ -1,0 +1,32 @@
+version: "3.7"
+
+services:
+  biweb:
+    volumes:
+      - type: bind
+        source: ./bi-web/src
+        target: /home/host/biweb/src/
+      - type: bind
+        source: ./bi-web/task
+        target: /home/host/biweb/task/
+      - type: bind
+        source: ./bi-web/tests
+        target: /home/host/biweb/tests/
+      - type: bind
+        source: ./bi-web/public
+        target: /home/host/biweb/public/
+  biapi:
+    volumes:
+      - type: bind
+        source: ./bi-api/
+        target: /biapi/
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+      - type: bind
+        source: /usr/bin/docker
+        target: /usr/bin/docker
+      - type: bind
+        source: ${HOME}/.m2
+        target: /home/host/.m2
+        # target: /root/.m2
