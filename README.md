@@ -30,6 +30,13 @@ id -g
 ```
 
 # Run
+
+## Production Environment
 ```
 docker-compose up -d
+```
+
+## Development Environment
+```
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 ```
