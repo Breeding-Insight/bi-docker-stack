@@ -7,7 +7,7 @@ services:
       context: ./bi-web
       args:
         HOST_USER_ID: ${USER_ID:-0}
-        HOST_USER_GROUP: ${GROUP_ID:-0}
+        HOST_GROUP_ID: ${GROUP_ID:-0}
     container_name: biweb
     depends_on:
       - biwaf
@@ -85,7 +85,7 @@ services:
         source: biapi_data
         target: /var/lib/postgresql/data
     networks:
-      backend:
+      protected:
         aliases:
           - dbserver  
   biwaf:
