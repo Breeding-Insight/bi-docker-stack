@@ -41,15 +41,13 @@ of the repo locally create a file called .env and save the Lastpass contents for
 "bi-api secrets" in this file.
 
 # Run
+
+## Production Environment
 ```
 docker-compose up -d
 ```
 
-
-## Docker support
-The API can run inside a Docker container using the Dockerfile for building the
-API image and the docker-compose.yml to run the container.
+## Development Environment
 ```
-docker-compose up -d biapi-dev
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 ```
-
