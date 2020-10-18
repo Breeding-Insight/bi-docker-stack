@@ -13,7 +13,7 @@ services:
       - biwaf
       - biapi
     ports:
-      - 8082:8080
+      - 8083:8080
     networks:
       upstream:
       backend:
@@ -73,7 +73,7 @@ services:
         aliases:
           - brapiserver
   bidb: 
-    image: postgres:11.4
+    image: postgres:12
     environment:
       POSTGRES_DB: 'bidb'
       POSTGRES_PASSWORD: ${DB_PASSWORD}
@@ -98,7 +98,7 @@ services:
       - ANOMALYIN=5
       - ANOMALYOUT=4
     ports:
-      - 80:8001
+      - 8089:8001
     networks:
       frontend:
         aliases:
