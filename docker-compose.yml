@@ -11,26 +11,13 @@ services:
     container_name: biweb
     depends_on:
       - biwaf
-      - biapi-dev
-    volumes:
-      - type: bind
-        source: ./bi-web/src
-        target: /home/host/biweb/src/
-      - type: bind
-        source: ./bi-web/task
-        target: /home/host/biweb/task/
-      - type: bind
-        source: ./bi-web/tests
-        target: /home/host/biweb/tests/
-      - type: bind
-        source: ./bi-web/public
-        target: /home/host/biweb/public/
+      - biapi
     ports:
       - 8082:8080
     networks:
       upstream:
       backend:
-  biapi-dev:
+  biapi:
     container_name: biapi
     image: biapi
     build:
@@ -41,29 +28,15 @@ services:
     depends_on:
       - bidb
       - brapi-server
-    volumes:
-      - type: bind
-        source: ./bi-api/
-        target: /biapi/
-      - type: bind
-        source: /var/run/docker.sock
-        target: /var/run/docker.sock
-      - type: bind
-        source: /usr/bin/docker
-        target: /usr/bin/docker
-      - type: bind
-        source: ../.m2
-        # target: /home/host/.m2
-        target: /root/.m2
     environment:
-      - API_INTERNAL_PORT=8081
-      - OAUTH_CLIENT_ID=${OAUTH_CLIENT_ID}
-      - JWT_DOMAIN=localhost
-      - DB_SERVER=dbserver:5432
-      - DB_NAME=bidb
-      - DB_USER=postgres
+      - API_INTERNAL_PORT=${API_INTERNAL_PORT:-8081}
+      - DB_SERVER=${DB_SERVER:-dbserver:5432}
+      - DB_NAME=${DB_NAME:-bidb}
+      - DB_USER=${DB_USER:-postgres}
       - DB_PASSWORD=${DB_PASSWORD}
+      - OAUTH_CLIENT_ID=${OAUTH_CLIENT_ID}
       - JWT_DOMAIN=${JWT_DOMAIN:-localhost}
+      - JWT_SECRET=${JWT_SECRET}
       - OAUTH_CLIENT_SECRET=${OAUTH_CLIENT_SECRET}
       - GITHUB_ACTOR=${GITHUB_ACTOR}
       - GITHUB_TOKEN=${GITHUB_TOKEN}
@@ -71,6 +44,7 @@ services:
       - BRAPI_PHENO_URL=${BRAPI_PHENO_URL}
       - BRAPI_GENO_URL=${BRAPI_GENO_URL}
       - BRAPI_REFERENCE_SOURCE=${BRAPI_REFERENCE_SOURCE}
+      - WEB_BASE_URL=${WEB_BASE_URL}
     ports:
       - 8081:8081
     networks:
@@ -99,10 +73,10 @@ services:
         aliases:
           - brapiserver
   bidb: 
-    image: postgis/postgis:12-3.0
+    image: postgres:11.4
     environment:
-      - POSTGRES_DB=bidb
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      POSTGRES_DB: 'bidb'
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     container_name: bidb
     ports:
       - 5432:5432
@@ -124,7 +98,7 @@ services:
       - ANOMALYIN=5
       - ANOMALYOUT=4
     ports:
-      - 8080:8001
+      - 80:8001
     networks:
       frontend:
         aliases:
