@@ -26,6 +26,7 @@ services:
         HOST_USER_ID: ${USER_ID:-0}
         HOST_GROUP_ID: ${GROUP_ID:-0}
     depends_on:
+      - biapiwaf
       - bidb
       - brapi-server
     environment:
@@ -88,6 +89,22 @@ services:
       protected:
         aliases:
           - dbserver  
+  biapiwaf:
+    image: franbuehler/modsecurity-crs-rp
+    container_name: biapiwaf
+    environment:
+      - PORT=8002
+      - BACKEND=http://biapi:8081
+      - PARANOIA=1
+      - ANOMALYIN=5
+      - ANOMALYOUT=4
+    ports:
+      - 8090:8002
+    networks:
+      frontend:
+        aliases:
+          - biapiwaf
+      backend:
   biwaf:
     image: franbuehler/modsecurity-crs-rp
     container_name: waf
@@ -118,6 +135,13 @@ services:
     ports:
       - 80:80
       - 443:443
+    volumes:
+      - type: volume
+        source: tls_certs
+        target: /etc/letsencrypt
+      - type: volume
+        source: proxy_config
+        target: /etc/nginx/conf.d
     networks:
       frontend:
       
@@ -128,5 +152,9 @@ networks:
   protected:
 
 volumes:
+  proxy_config:
+    name: proxy_config
+  tls_certs:
+    name: tls_certs
   biapi_data:
     name: biapi_data
