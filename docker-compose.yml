@@ -46,6 +46,9 @@ services:
       - BRAPI_GENO_URL=${BRAPI_GENO_URL}
       - BRAPI_REFERENCE_SOURCE=${BRAPI_REFERENCE_SOURCE}
       - WEB_BASE_URL=${WEB_BASE_URL}
+      - EMAIL_RELAY_HOST=${EMAIL_RELAY_HOST}
+      - EMAIL_RELAY_PORT=${EMAIL_RELAY_PORT}
+      - EMAIL_FROM=${EMAIL_FROM}
     ports:
       - 8090:8081
     networks:
@@ -73,6 +76,13 @@ services:
       backend:
         aliases:
           - brapiserver
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: mailhog
+    restart: always
+    ports:
+      - 1025:1025
+      - 8025:8025
   bidb: 
     image: postgres:12
     environment:
