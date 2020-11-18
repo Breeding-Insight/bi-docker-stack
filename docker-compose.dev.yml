@@ -28,5 +28,5 @@ services:
         target: /usr/bin/docker
       - type: bind
         source: ${HOME}/.m2
-        target: /home/host/.m2
-        # target: /root/.m2
+        #target: /home/host/.m2
+        target: /root/.m2
