@@ -4,3 +4,6 @@
 [submodule "bi-api"]
 	path = bi-api
 	url = https://github.com/Breeding-Insight/bi-api
+[submodule "waf"]
+	path = waf
+	url = https://github.com/Breeding-Insight/modsecurity-crs-rp.git
