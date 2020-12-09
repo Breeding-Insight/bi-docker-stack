@@ -26,7 +26,6 @@ services:
         HOST_USER_ID: ${USER_ID:-0}
         HOST_GROUP_ID: ${GROUP_ID:-0}
     depends_on:
-      - biapiwaf
       - bidb
       - brapi-server
     environment:
@@ -83,6 +82,9 @@ services:
     ports:
       - 1025:1025
       - 8025:8025
+    networks:
+      backend:
+      protected:
   bidb: 
     image: postgres:12
     environment:
@@ -101,6 +103,9 @@ services:
           - dbserver  
   biapiwaf:
     image: franbuehler/modsecurity-crs-rp
+    #image: waf
+    #build:
+      #context: ./waf
     container_name: biapiwaf
     environment:
       - PORT=8002
@@ -139,9 +144,11 @@ services:
       context: ./proxy
       args:
         - REGISTERED_DOMAIN=${REGISTERED_DOMAIN:-localhost}
-        - WAF_IP=biwaf:8001
+        - API_IP=biapi:8081
+        - WEB_IP=biweb:8080
     depends_on:
-      - biwaf
+      - biapi
+      - biweb
     ports:
       - 80:80
       - 443:443
@@ -153,9 +160,12 @@ services:
         source: proxy_config
         target: /etc/nginx/conf.d
     networks:
-      frontend:
+      edge:
+      upstream:
+      backend:
       
 networks:
+  edge:
   frontend:
   upstream:
   backend:
