@@ -4,7 +4,7 @@ RUN echo "deb http://ftp.debian.org/debian buster-backports main" >> /etc/apt/so
 RUN apt-get update
 RUN apt install -y python-certbot-nginx -t buster-backports
 ARG REGISTERED_DOMAIN
-ARG API_IP
+ARG WAF_IP
 ARG WEB_IP
 RUN cd /etc/nginx/conf.d && \
     echo "proxy_set_header Host \$host;\n\
@@ -20,9 +20,9 @@ proxy_read_timeout 36000s;\n\
 proxy_redirect off;\n"\
 >> proxy-headers.conf
 RUN cd /etc/nginx/conf.d && \
-    echo "upstream api {\n\
-  # the internal IP of the upstream api server\n\
-  server ${API_IP};\n\
+    echo "upstream waf {\n\
+  # the internal IP of the upstream waf server\n\
+  server ${WAF_IP};\n\
 }\n\
 \n\
 upstream web {\n\
@@ -33,15 +33,15 @@ server {\n\
     server_name ${REGISTERED_DOMAIN};\n\
 \n\
     location /v1 {\n\
-        proxy_pass http://api;\n\
+        proxy_pass http://waf;\n\
         include /etc/nginx/conf.d/proxy-headers.conf;\n\
     }\n\
     location /sso {\n\
-        proxy_pass http://api;\n\
+        proxy_pass http://waf;\n\
         include /etc/nginx/conf.d/proxy-headers.conf;\n\
     }\n\
     location /health {\n\
-        proxy_pass http://api;\n\
+        proxy_pass http://waf;\n\
         include /etc/nginx/conf.d/proxy-headers.conf;\n\
     }\n\
     location / {\n\

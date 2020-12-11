@@ -87,25 +87,6 @@ services:
       backend:
         aliases:
           - dbserver  
-  # biapiwaf:
-  #   image: franbuehler/modsecurity-crs-rp
-  #   #image: waf
-  #   #build:
-  #     #context: ./waf
-  #   container_name: biapiwaf
-  #   environment:
-  #     - PORT=8002
-  #     - BACKEND=http://biapi:8081
-  #     - PARANOIA=1
-  #     - ANOMALYIN=5
-  #     - ANOMALYOUT=4
-  #   ports:
-  #     - 8081:8002
-  #   networks:
-  #     frontend:
-  #       aliases:
-  #         - biapiwaf
-  #     backend:
   biwaf:
     image: franbuehler/modsecurity-crs-rp
     container_name: waf
@@ -130,8 +111,7 @@ services:
       context: ./proxy
       args:
         - REGISTERED_DOMAIN=${REGISTERED_DOMAIN:-localhost}
-        ###- API_IP=biapi:8081
-        - API_IP=waf:8001        
+        - WAF_IP=waf:8001        
         - WEB_IP=biweb:8080
     depends_on:
       - biapi
