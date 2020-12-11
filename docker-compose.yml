@@ -12,11 +12,8 @@ services:
     depends_on:
       - biwaf
       - biapi
-    ports:
-      - 8083:8080
     networks:
       upstream:
-      backend:
   biapi:
     container_name: biapi
     image: biapi
@@ -48,8 +45,6 @@ services:
       - EMAIL_RELAY_HOST=${EMAIL_RELAY_HOST}
       - EMAIL_RELAY_PORT=${EMAIL_RELAY_PORT}
       - EMAIL_FROM=${EMAIL_FROM}
-    ports:
-      - 8090:8081
     networks:
       backend:
       protected:
@@ -63,15 +58,10 @@ services:
       - BRAPI_DB=${BRAPI_DB}
       - BRAPI_DB_USER=${BRAPI_DB_USER}
       - BRAPI_DB_PASSWORD=${BRAPI_DB_PASSWORD}
-    ports:
-      - ${BRAPI_SERVER_PORT}:8080
     volumes:
       - ./bi-api/src/main/resources/brapi/properties/application.properties:/home/brapi/properties/application.properties
       - ./bi-api/src/main/resources/brapi/sql/:/home/brapi/sql/
     networks:
-      protected:
-        aliases:
-          - brapiserver
       backend:
         aliases:
           - brapiserver
@@ -80,62 +70,58 @@ services:
     container_name: mailhog
     restart: always
     ports:
-      - 1025:1025
       - 8025:8025
     networks:
       backend:
-      protected:
   bidb: 
     image: postgres:12
     environment:
       POSTGRES_DB: 'bidb'
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     container_name: bidb
-    ports:
-      - 5432:5432
     volumes:
       - type: volume
         source: biapi_data
         target: /var/lib/postgresql/data
     networks:
-      protected:
+      backend:
         aliases:
           - dbserver  
-  biapiwaf:
-    image: franbuehler/modsecurity-crs-rp
-    #image: waf
-    #build:
-      #context: ./waf
-    container_name: biapiwaf
-    environment:
-      - PORT=8002
-      - BACKEND=http://biapi:8081
-      - PARANOIA=1
-      - ANOMALYIN=5
-      - ANOMALYOUT=4
-    ports:
-      - 8081:8002
-    networks:
-      frontend:
-        aliases:
-          - biapiwaf
-      backend:
+  # biapiwaf:
+  #   image: franbuehler/modsecurity-crs-rp
+  #   #image: waf
+  #   #build:
+  #     #context: ./waf
+  #   container_name: biapiwaf
+  #   environment:
+  #     - PORT=8002
+  #     - BACKEND=http://biapi:8081
+  #     - PARANOIA=1
+  #     - ANOMALYIN=5
+  #     - ANOMALYOUT=4
+  #   ports:
+  #     - 8081:8002
+  #   networks:
+  #     frontend:
+  #       aliases:
+  #         - biapiwaf
+  #     backend:
   biwaf:
     image: franbuehler/modsecurity-crs-rp
     container_name: waf
     environment:
       - PORT=8001
-      - BACKEND=http://biweb:8080
+      - BACKEND=http://biapi:8081
       - PARANOIA=1
       - ANOMALYIN=5
       - ANOMALYOUT=4
-    ports:
-      - 8089:8001
     networks:
-      frontend:
+      protected:
         aliases:
           - waf
       upstream:
+        aliases:
+          - waf
   biproxy:
     container_name: biproxy    
     image: biproxy
@@ -144,7 +130,8 @@ services:
       context: ./proxy
       args:
         - REGISTERED_DOMAIN=${REGISTERED_DOMAIN:-localhost}
-        - API_IP=biapi:8081
+        ###- API_IP=biapi:8081
+        - API_IP=waf:8001        
         - WEB_IP=biweb:8080
     depends_on:
       - biapi
@@ -160,13 +147,9 @@ services:
         source: proxy_config
         target: /etc/nginx/conf.d
     networks:
-      edge:
       upstream:
-      backend:
       
 networks:
-  edge:
-  frontend:
   upstream:
   backend:
   protected:
