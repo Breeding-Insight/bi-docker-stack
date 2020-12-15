@@ -57,6 +57,10 @@ proxy which already has Certbot by LetsEncrypt installed. The deployment
 environment should set the value of the environment variable `REGISTERED_DOMAIN`
 to the value of the registered domain for deployed instance.
 
+Also, check that firewall security rules are in place so that the proxy server
+can talk with the LetsEncypt server. These rules should be removed after TLS
+certs are installed.
+
 Bash into the docker container named `biproxy` and call Certbot.
 ```
 docker exec -it biproxy bash
@@ -65,6 +69,7 @@ certbot -d --nginx <REGISTERED_DOMAIN>
 Certbot will ask a series of questions to be answered interactively, then 
 automatically install the TLS certs and update the nginx config files.
 
+## Reverse Proxy
 The nginx config files and TLS certs are stored on volumes mounted on the host
 machine, ensuring that TLS will continue to be used even after restarting the
 docker stack after code updates. However, this also means that a volume must be
