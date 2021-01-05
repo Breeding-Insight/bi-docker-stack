@@ -51,3 +51,28 @@ docker-compose up -d
 ```
 docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 ```
+## TLS Support
+In a deployment environment TLS support can be easily provided by the reverse
+proxy container which already has Certbot by LetsEncrypt installed. The
+deployment environment should set the value of the environment variable
+`REGISTERED_DOMAIN` to the value of the registered domain for deployed instance.
+
+Bash into the docker container named `biproxy` and call Certbot.
+```
+docker exec -it biproxy bash
+certbot -d --nginx <REGISTERED_DOMAIN>
+```
+Certbot will ask a series of questions to be answered interactively, then 
+automatically install the TLS certs and update the nginx config files.
+
+## Reverse Proxy
+The nginx config files and TLS certs are stored on volumes mounted on the host
+machine, ensuring that TLS will continue to be used even after restarting the
+docker stack after code updates. However, this also means that a volume must be
+removed before restarting the stack if there are updates to the configuration of
+the reverse proxy.
+
+The Dockerfile for the reverse proxy contains the nginx rules used to direct
+traffic to the appropriate upstream server. Any new features added to bi-api
+that use an endpoint not in the /v1/ or /sso/ name spaces must have a rule added
+to the proxy config in order to send these requests upstream.

@@ -2,6 +2,8 @@ version: "3.7"
 
 services:
   biweb:
+    ports:
+      - 8083:8080
     volumes:
       - type: bind
         source: ./bi-web/src
@@ -16,6 +18,8 @@ services:
         source: ./bi-web/public
         target: /home/host/biweb/public/
   biapi:
+    ports:
+      - 8090:8081
     volumes:
       - type: bind
         source: ./bi-api/
@@ -28,5 +32,19 @@ services:
         target: /usr/bin/docker
       - type: bind
         source: ${HOME}/.m2
-        target: /home/host/.m2
-        # target: /root/.m2
+        #target: /home/host/.m2
+        target: /root/.m2
+  brapi-server:
+    ports:
+      - ${BRAPI_SERVER_PORT}:8080    
+  mailhog:
+    ports:
+      - 1025:1025
+      - 8025:8025
+  bidb:
+    ports:
+      - 5432:5432
+  biwaf:
+    ports:
+      - 8089:8001
+    

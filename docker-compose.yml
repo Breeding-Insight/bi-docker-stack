@@ -12,11 +12,8 @@ services:
     depends_on:
       - biwaf
       - biapi
-    ports:
-      - 8082:8080
     networks:
       upstream:
-      backend:
   biapi:
     container_name: biapi
     image: biapi
@@ -45,8 +42,9 @@ services:
       - BRAPI_GENO_URL=${BRAPI_GENO_URL}
       - BRAPI_REFERENCE_SOURCE=${BRAPI_REFERENCE_SOURCE}
       - WEB_BASE_URL=${WEB_BASE_URL}
-    ports:
-      - 8081:8081
+      - EMAIL_RELAY_HOST=${EMAIL_RELAY_HOST}
+      - EMAIL_RELAY_PORT=${EMAIL_RELAY_PORT}
+      - EMAIL_FROM=${EMAIL_FROM}
     networks:
       backend:
       protected:
@@ -60,32 +58,33 @@ services:
       - BRAPI_DB=${BRAPI_DB}
       - BRAPI_DB_USER=${BRAPI_DB_USER}
       - BRAPI_DB_PASSWORD=${BRAPI_DB_PASSWORD}
-    ports:
-      - ${BRAPI_SERVER_PORT}:8080
     volumes:
       - ./bi-api/src/main/resources/brapi/properties/application.properties:/home/brapi/properties/application.properties
       - ./bi-api/src/main/resources/brapi/sql/:/home/brapi/sql/
     networks:
-      protected:
-        aliases:
-          - brapiserver
       backend:
         aliases:
           - brapiserver
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: mailhog
+    restart: always
+    ports:
+      - 8025:8025
+    networks:
+      backend:
   bidb: 
-    image: postgres:11.4
+    image: postgres:12
     environment:
       POSTGRES_DB: 'bidb'
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     container_name: bidb
-    ports:
-      - 5432:5432
     volumes:
       - type: volume
         source: biapi_data
         target: /var/lib/postgresql/data
     networks:
-      protected:
+      backend:
         aliases:
           - dbserver  
   biwaf:
@@ -93,22 +92,52 @@ services:
     container_name: waf
     environment:
       - PORT=8001
-      - BACKEND=http://biweb:8080
+      - BACKEND=http://biapi:8081
       - PARANOIA=1
       - ANOMALYIN=5
       - ANOMALYOUT=4
-    ports:
-      - 80:8001
     networks:
-      frontend:
+      protected:
+        aliases:
+          - waf
       upstream:
-
+        aliases:
+          - waf
+  biproxy:
+    container_name: biproxy    
+    image: biproxy
+    build:
+      dockerfile: biproxy.docker
+      context: ./proxy
+      args:
+        - REGISTERED_DOMAIN=${REGISTERED_DOMAIN:-localhost}
+        - WAF_IP=waf:8001        
+        - WEB_IP=biweb:8080
+    depends_on:
+      - biapi
+      - biweb
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - type: volume
+        source: tls_certs
+        target: /etc/letsencrypt
+      - type: volume
+        source: proxy_config
+        target: /etc/nginx/conf.d
+    networks:
+      upstream:
+      
 networks:
-  frontend:
   upstream:
   backend:
   protected:
 
 volumes:
+  proxy_config:
+    name: proxy_config
+  tls_certs:
+    name: tls_certs
   biapi_data:
     name: biapi_data
