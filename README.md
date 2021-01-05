@@ -57,10 +57,6 @@ proxy which already has Certbot by LetsEncrypt installed. The deployment
 environment should set the value of the environment variable `REGISTERED_DOMAIN`
 to the value of the registered domain for deployed instance.
 
-Also, check that firewall security rules are in place so that the proxy server
-can talk with the LetsEncypt server. These rules should be removed after TLS
-certs are installed.
-
 Bash into the docker container named `biproxy` and call Certbot.
 ```
 docker exec -it biproxy bash
