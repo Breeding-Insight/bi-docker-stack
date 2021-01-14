@@ -44,7 +44,7 @@ services:
   bidb:
     ports:
       - 5432:5432
-  biwaf:
-    ports:
-      - 8089:8001
+  # biwaf:
+  #   ports:
+  #     - 8089:8001
     

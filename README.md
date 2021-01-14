@@ -37,8 +37,8 @@ id -g
 
 Private values used in each environment are stored in Lastpass and are never
 placed in docker-compose.yml and never committed to the repo.  At the root level
-of the repo locally create a file called .env and save the Lastpass contents for
-"bi-api secrets" in this file.
+of the repo locally create a file called `.env` (a template exists named `.env.template`) 
+and save the Lastpass contents for "bi-api secrets" in this file.
 
 # Run
 
@@ -55,13 +55,16 @@ docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 In a deployment environment TLS support can be easily provided by the reverse
 proxy container which already has Certbot by LetsEncrypt installed. The
 deployment environment should set the value of the environment variable
-`REGISTERED_DOMAIN` to the value of the registered domain for deployed instance.
+`REGISTERED_DOMAIN` to the value of the registered domain for deployed instance.  
+NOTE* This environment variable should be added to your `.env` file
 
 Bash into the docker container named `biproxy` and call Certbot.
+
 ```
 docker exec -it biproxy bash
-certbot -d --nginx <REGISTERED_DOMAIN>
+certbot --nginx -d <REGISTERED_DOMAIN>
 ```
+
 Certbot will ask a series of questions to be answered interactively, then 
 automatically install the TLS certs and update the nginx config files.
 
