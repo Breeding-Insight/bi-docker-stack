@@ -10,7 +10,6 @@ services:
         HOST_GROUP_ID: ${GROUP_ID:-0}
     container_name: biweb
     depends_on:
-      - biwaf
       - biapi
     networks:
       upstream:
@@ -74,7 +73,7 @@ services:
     networks:
       backend:
   bidb: 
-    image: postgres:12
+    image: postgres:11.4
     environment:
       POSTGRES_DB: 'bidb'
       POSTGRES_PASSWORD: ${DB_PASSWORD}
@@ -87,22 +86,22 @@ services:
       backend:
         aliases:
           - dbserver  
-  biwaf:
-    image: franbuehler/modsecurity-crs-rp
-    container_name: waf
-    environment:
-      - PORT=8001
-      - BACKEND=http://biapi:8081
-      - PARANOIA=1
-      - ANOMALYIN=5
-      - ANOMALYOUT=4
-    networks:
-      protected:
-        aliases:
-          - waf
-      upstream:
-        aliases:
-          - waf
+  # biwaf:
+  #   image: franbuehler/modsecurity-crs-rp
+  #   container_name: waf
+  #   environment:
+  #     - PORT=8001
+  #     - BACKEND=http://biapi:8081
+  #     - PARANOIA=1
+  #     - ANOMALYIN=5
+  #     - ANOMALYOUT=4
+  #   networks:
+  #     protected:
+  #       aliases:
+  #         - waf
+  #     upstream:
+  #       aliases:
+  #         - waf
   biproxy:
     container_name: biproxy    
     image: biproxy
@@ -111,7 +110,7 @@ services:
       context: ./proxy
       args:
         - REGISTERED_DOMAIN=${REGISTERED_DOMAIN:-localhost}
-        - WAF_IP=waf:8001        
+        - API_IP=biapi:8081
         - WEB_IP=biweb:8080
     depends_on:
       - biapi
@@ -128,6 +127,7 @@ services:
         target: /etc/nginx/conf.d
     networks:
       upstream:
+      protected:
       
 networks:
   upstream:
