@@ -110,7 +110,7 @@ services:
       context: ./proxy
       args:
         - REGISTERED_DOMAIN=${REGISTERED_DOMAIN:-localhost}
-        - WAF_IP=biapi:8081
+        - API_IP=biapi:8081
         - WEB_IP=biweb:8080
     depends_on:
       - biapi
