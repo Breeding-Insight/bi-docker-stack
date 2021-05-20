@@ -1,0 +1,36 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Submodule Sync
+
+on:
+  schedule:
+    - cron: 0 5 * * *
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    
+    defaults:
+      run:
+        shell: bash
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.CI_TOKEN }}
+          submodules: true
+
+      - name: Update submodules
+        run: |
+          git pull --recurse-submodules
+          git submodule update --remote
+
+      - name: Commit update
+        run: |
+          git config --local user.email "bidevteam@cornell.edu"
+          git config --local user.name "rob-ouser-bi"
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+          git commit -am "Auto updated submodule references" && git push || echo "No changes to commit"
