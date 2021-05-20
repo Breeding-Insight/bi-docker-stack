@@ -1,6 +1,8 @@
 [submodule "bi-web"]
 	path = bi-web
 	url = https://github.com/Breeding-Insight/bi-web
+	branch = develop
 [submodule "bi-api"]
 	path = bi-api
 	url = https://github.com/Breeding-Insight/bi-api
+	branch = develop
