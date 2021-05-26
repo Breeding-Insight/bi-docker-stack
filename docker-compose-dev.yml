@@ -2,6 +2,11 @@ version: "3.7"
 
 services:
   biweb:
+    build:
+      context: ./bi-web
+      args:
+        HOST_USER_ID: ${USER_ID:-0}
+        HOST_GROUP_ID: ${GROUP_ID:-0}
     ports:
       - 8083:8080
     volumes:
@@ -18,6 +23,12 @@ services:
         source: ./bi-web/public
         target: /home/host/biweb/public/
   biapi:
+    build:
+      context: ./bi-api
+      dockerfile: ./bi-api/Dockerfile-dev
+      args:
+        HOST_USER_ID: ${USER_ID:-0}
+        HOST_GROUP_ID: ${GROUP_ID:-0}
     ports:
       - 8090:8081
     volumes:
@@ -34,17 +45,23 @@ services:
         source: ${HOME}/.m2
         #target: /home/host/.m2
         target: /root/.m2
+    environment:
+      - GITHUB_ACTOR=${GITHUB_ACTOR}
+      - GITHUB_TOKEN=${GITHUB_TOKEN}
   brapi-server:
+    volumes:
+      - ./bi-api/src/main/resources/brapi/properties/application.properties:/home/brapi/properties/application.properties
+      - ./bi-api/src/main/resources/brapi/sql/:/home/brapi/sql/
     ports:
       - ${BRAPI_SERVER_PORT}:8080    
   mailhog:
     ports:
       - 1025:1025
-      - 8025:8025
   bidb:
     ports:
       - 5432:5432
   # biwaf:
   #   ports:
   #     - 8089:8001
-    
+
+

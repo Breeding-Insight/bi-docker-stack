@@ -1,18 +1,5 @@
-# Installation
+# Prereqs
 Docker and  Docker-compose are both required.
-
-Cloning this repo wil create empty folders for two git submodules: bi-api and
-bi-web.  The source code for these submodules must be pulled by first updating
-the local .git/config with the mapping from the .gitmodules file in this repo 
-and fetching the data as well. 
-```
-git submodule update --init --recursive
-```
-
-The docker-compose.yml should contain a service for each environment the API is
-to be run in: e.g develop, test, staging, and production.  Each service contains
-under the environment key public values for environment variables used as params
-for the API configuration.
 
 # Configuration
 The containers are not run by the root user but by a new user and group called
@@ -47,10 +34,16 @@ and save the Lastpass contents for "bi-api secrets" in this file.
 docker-compose up -d
 ```
 
-## Development Environment
+## Pre-Production Environment
 ```
-docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+docker-compose -f docker-compose.yml -f docker-compose-rc.yml up -d
 ```
+
+## QA Environment
+```
+docker-compose -f docker-compose.yml -f docker-compose-qa.yml up -d
+```
+
 ## TLS Support
 In a deployment environment TLS support can be easily provided by the reverse
 proxy container which already has Certbot by LetsEncrypt installed. The
@@ -79,3 +72,18 @@ The Dockerfile for the reverse proxy contains the nginx rules used to direct
 traffic to the appropriate upstream server. Any new features added to bi-api
 that use an endpoint not in the /v1/ or /sso/ name spaces must have a rule added
 to the proxy config in order to send these requests upstream.
+
+
+# Development Environment
+
+To run a development environment, you will need to initialize the git submodules that exist within this repository:
+
+```
+git submodule update --init --recursive
+```
+
+Then run:
+
+```
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+```

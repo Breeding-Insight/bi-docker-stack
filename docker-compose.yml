@@ -2,12 +2,7 @@ version: "3.7"
 
 services:
   biweb:
-    image: biweb
-    build:
-      context: ./bi-web
-      args:
-        HOST_USER_ID: ${USER_ID:-0}
-        HOST_GROUP_ID: ${GROUP_ID:-0}
+    image: breedinginsight/biweb:latest
     container_name: biweb
     depends_on:
       - biapi
@@ -15,12 +10,7 @@ services:
       upstream:
   biapi:
     container_name: biapi
-    image: biapi
-    build:
-      context: ./bi-api
-      args:
-        HOST_USER_ID: ${USER_ID:-0}
-        HOST_GROUP_ID: ${GROUP_ID:-0}
+    image: breedinginsight/biapi:latest
     depends_on:
       - bidb
       - brapi-server
@@ -34,8 +24,6 @@ services:
       - JWT_DOMAIN=${JWT_DOMAIN:-localhost}
       - JWT_SECRET=${JWT_SECRET}
       - OAUTH_CLIENT_SECRET=${OAUTH_CLIENT_SECRET}
-      - GITHUB_ACTOR=${GITHUB_ACTOR}
-      - GITHUB_TOKEN=${GITHUB_TOKEN}
       - BRAPI_DEFAULT_URL=${BRAPI_DEFAULT_URL}
       - BRAPI_REFERENCE_SOURCE=${BRAPI_REFERENCE_SOURCE}
       - WEB_BASE_URL=${WEB_BASE_URL}
@@ -56,8 +44,8 @@ services:
       - BRAPI_DB_USER=${BRAPI_DB_USER}
       - BRAPI_DB_PASSWORD=${BRAPI_DB_PASSWORD}
     volumes:
-      - ./bi-api/src/main/resources/brapi/properties/application.properties:/home/brapi/properties/application.properties
-      - ./bi-api/src/main/resources/brapi/sql/:/home/brapi/sql/
+      - ./brapi-server/application.properties:/home/brapi/properties/application.properties
+      - ./brapi-server/sql/:/home/brapi/sql/
     networks:
       backend:
         aliases:

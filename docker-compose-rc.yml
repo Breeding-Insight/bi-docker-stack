@@ -1,0 +1,7 @@
+version: "3.7"
+
+services:
+  biweb:
+    image: breedinginsight/biweb:rc
+  biapi:
+    image: breedinginsight/biapi:rc
