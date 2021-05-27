@@ -6,6 +6,8 @@ services:
     container_name: biweb
     depends_on:
       - biapi
+    environment:
+      - API_BASE_URL=${API_BASE_URL}
     networks:
       upstream:
   biapi:
