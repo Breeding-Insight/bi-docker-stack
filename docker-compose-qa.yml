@@ -5,3 +5,6 @@ services:
     image: breedinginsight/biweb:develop
   biapi:
     image: breedinginsight/biapi:develop
+  bidb:
+      ports:
+        - 5432:5432
