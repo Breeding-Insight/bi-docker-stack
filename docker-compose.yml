@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   biweb:
-    image: breedinginsight/biweb:latest
+    image: breedinginsight/biweb:develop
     container_name: biweb
     depends_on:
       - biapi
@@ -12,7 +12,7 @@ services:
       upstream:
   biapi:
     container_name: biapi
-    image: breedinginsight/biapi:latest
+    image: breedinginsight/biapi:develop
     depends_on:
       - bidb
       - brapi-server
