@@ -2,6 +2,7 @@ version: "3.7"
 
 services:
   biweb:
+    image: breedinginsight/biweb:develop
     build:
       context: ./bi-web
       args:
@@ -23,6 +24,7 @@ services:
         source: ./bi-web/public
         target: /home/host/biweb/public/
   biapi:
+    image: breedinginsight/biapi:develop
     build:
       context: ./bi-api
       dockerfile: ./bi-api/Dockerfile-dev
