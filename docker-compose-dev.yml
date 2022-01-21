@@ -9,7 +9,7 @@ services:
         HOST_USER_ID: ${USER_ID:-0}
         HOST_GROUP_ID: ${GROUP_ID:-0}
     ports:
-      - 8083:8080
+      - 8082:8080
     volumes:
       - type: bind
         source: ./bi-web/src
