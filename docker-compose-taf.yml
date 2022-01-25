@@ -40,6 +40,11 @@ services:
   bidb:
     ports:
       - 5432:5432
+  biproxy:
+    networks:
+      upstream:
+      protected:
+      default:
   # biwaf:
   #   ports:
   #     - 8089:8001
