@@ -23,6 +23,11 @@ services:
     environment:
       - GITHUB_ACTOR=${GITHUB_ACTOR}
       - GITHUB_TOKEN=${GITHUB_TOKEN}
+    healthcheck:
+      test: [ "CMD-SHELL", "curl --fail http://localhost:8081/health || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 30
   brapi-server:
     volumes:
       - ./bi-api/src/main/resources/brapi/properties/application.properties:/home/brapi/properties/application.properties
