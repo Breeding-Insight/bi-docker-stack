@@ -29,15 +29,18 @@ services:
       timeout: 5s
       retries: 30
   brapi-server:
+    container_name: taf-brapi-server
     volumes:
       - ./bi-api/src/main/resources/brapi/properties/application.properties:/home/brapi/properties/application.properties
       - ./bi-api/src/main/resources/brapi/sql/:/home/brapi/sql/
     ports:
       - ${BRAPI_SERVER_PORT}:8080
   mailhog:
+    container_name: taf-mailhog
     ports:
       - 1025:1025
   bidb:
+    container_name: taf-brapi-server
     ports:
       - 5432:5432
   biproxy:
