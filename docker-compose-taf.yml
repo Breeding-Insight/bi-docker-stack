@@ -40,7 +40,7 @@ services:
     ports:
       - 1025:1025
   bidb:
-    container_name: taf-brapi-server
+    container_name: taf-bidb
   biproxy:
     networks:
       upstream:
