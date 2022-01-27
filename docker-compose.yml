@@ -58,9 +58,9 @@ services:
       - BRAPI_DB=${BRAPI_DB}
       - BRAPI_DB_USER=${BRAPI_DB_USER}
       - BRAPI_DB_PASSWORD=${BRAPI_DB_PASSWORD}
-    volumes:
-      - ./brapi-server/application.properties:/home/brapi/properties/application.properties
-      - ./brapi-server/sql/:/home/brapi/sql/
+    # volumes:
+      # - ./brapi-server/application.properties:/home/brapi/properties/application.properties
+      # - ./brapi-server/sql/:/home/brapi/sql/
     networks:
       backend:
         aliases:
