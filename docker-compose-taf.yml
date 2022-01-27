@@ -2,24 +2,24 @@ version: "3.7"
 
 services:
   biweb:
-    image: breedinginsight/biweb:develop
+    image: breedinginsight/biweb:taf
     build:
       context: ./bi-web
       args:
         HOST_USER_ID: ${USER_ID:-0}
         HOST_GROUP_ID: ${GROUP_ID:-0}
-    ports:
-      - 8082:8080
+    # ports:
+    #   - 8082:8080
   biapi:
-    image: breedinginsight/biapi:develop
+    image: breedinginsight/biapi:taf
     build:
       context: ./bi-api
       dockerfile: ./Dockerfile-dev
       args:
         HOST_USER_ID: ${USER_ID:-0}
         HOST_GROUP_ID: ${GROUP_ID:-0}
-    ports:
-      - 8090:8081
+    # ports:
+    #   - 8090:8081
     environment:
       - GITHUB_ACTOR=${GITHUB_ACTOR}
       - GITHUB_TOKEN=${GITHUB_TOKEN}
@@ -29,18 +29,18 @@ services:
       timeout: 5s
       retries: 30
   brapi-server:
-    container_name: brapi-server
-    volumes:
-      - ./bi-api/src/main/resources/brapi/properties/application.properties:/home/brapi/properties/application.properties
-      - ./bi-api/src/main/resources/brapi/sql/:/home/brapi/sql/
+    # container_name: brapi-server
+    # volumes:
+    #   - ./bi-api/src/main/resources/brapi/properties/application.properties:/home/brapi/properties/application.properties
+    #   - ./bi-api/src/main/resources/brapi/sql/:/home/brapi/sql/
     ports:
       - ${BRAPI_SERVER_PORT}:8080
   mailhog:
     container_name: mailhog
     ports:
       - 1025:1025
-  bidb:
-    container_name: bidb
+  # bidb:
+  #   container_name: bidb
   # biwaf:
   #   ports:
   #     - 8089:8001
