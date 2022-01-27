@@ -29,6 +29,9 @@ services:
       timeout: 5s
       retries: 30
   brapi-server:
+    image: breedinginsight/brapi-java-server:taf
+    build:
+      context: ./brapi-server
     # container_name: brapi-server
     # volumes:
     #   - ./bi-api/src/main/resources/brapi/properties/application.properties:/home/brapi/properties/application.properties
