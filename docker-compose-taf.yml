@@ -42,6 +42,10 @@ services:
     container_name: mailhog
     ports:
       - 1025:1025
+  biproxy:
+    ports:
+      - 5080:80
+      - 8443:443
   # bidb:
   #   container_name: bidb
   # biwaf:
