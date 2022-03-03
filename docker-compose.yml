@@ -8,7 +8,8 @@ services:
       - biapi
     environment:
       - API_BASE_URL=${API_BASE_URL}
-      - ANALYTICS_GTAG_ID=${ANALYTICS_GTAG_ID} 
+      - ANALYTICS_GTAG_ID=${ANALYTICS_GTAG_ID}
+      - SANDBOX_MODE=${SANDBOX_MODE}
     networks:
       upstream:
   biapi:
