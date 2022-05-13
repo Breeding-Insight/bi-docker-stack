@@ -10,6 +10,7 @@ services:
       - API_BASE_URL=${API_BASE_URL}
       - ANALYTICS_GTAG_ID=${ANALYTICS_GTAG_ID}
       - SANDBOX_MODE=${SANDBOX_MODE}
+      - BRAPI_REFERENCE_SOURCE=${BRAPI_REFERENCE_SOURCE}
     networks:
       upstream:
   biapi:
