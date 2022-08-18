@@ -4,6 +4,7 @@ services:
   biweb:
     image: breedinginsight/biweb:latest
     container_name: biweb
+    restart: always
     depends_on:
       - biapi
     environment:
@@ -19,6 +20,7 @@ services:
     depends_on:
       - bidb
       - brapi-server
+      - redis
     environment:
       - API_INTERNAL_PORT=${API_INTERNAL_PORT:-8081}
       - DB_SERVER=${DB_SERVER:-dbserver:5432}
@@ -40,6 +42,9 @@ services:
       - EMAIL_RELAY_HOST=${EMAIL_RELAY_HOST}
       - EMAIL_RELAY_PORT=${EMAIL_RELAY_PORT}
       - EMAIL_FROM=${EMAIL_FROM}
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379}
+      - REDIS_TIMEOUT=${REDIS_TIMEOUT:-30s}
+      - REDIS_SSL=${REDIS_SSL:-false}
     networks:
       backend:
       protected:
@@ -72,6 +77,12 @@ services:
     ports:
       - 8025:8025
       - 1025:1025
+    networks:
+      backend:
+  redis:
+    image: redis
+    container_name: redis
+    restart: always
     networks:
       backend:
   bidb: 
