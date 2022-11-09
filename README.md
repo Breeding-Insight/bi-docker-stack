@@ -30,18 +30,21 @@ and save the Lastpass contents for "bi-api secrets" in this file.
 # Run
 
 ## Production Environment
+
+An instance of Redis and Gigwa are expected to be running.  The `.env` file must be updated to reflect where these services live.  To stand up instances of Redis or Gigwa, please refer to their respective docker-compose files (`docker-compose-redis.yml`, `docker-compose-gigwa.yml`)
+
 ```
 docker-compose up -d
 ```
 
 ## Pre-Production Environment
 ```
-docker-compose -f docker-compose.yml -f docker-compose-rc.yml up -d
+docker-compose -f docker-compose.yml -f docker-compose-redis.yml -f docker-compose-gigwa.yml -f docker-compose-rc.yml up -d
 ```
 
 ## QA Environment
 ```
-docker-compose -f docker-compose.yml -f docker-compose-qa.yml up -d
+docker-compose -f docker-compose.yml -f docker-compose-redis.yml -f docker-compose-gigwa.yml -f docker-compose-qa.yml up -d
 ```
 
 ## TLS Support
@@ -85,5 +88,5 @@ git submodule update --init --recursive
 Then run:
 
 ```
-docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+docker-compose -f docker-compose.yml -f docker-compose-redis.yml -f docker-compose-gigwa.yml -f docker-compose-dev.yml up -d
 ```

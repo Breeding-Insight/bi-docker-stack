@@ -5,3 +5,13 @@ services:
     image: breedinginsight/biweb:rc
   biapi:
     image: breedinginsight/biapi:rc
+    depends_on:
+      - bidb
+      - brapi-server
+      - redis
+      - gigwa
+    environment:
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379}
+      - REDIS_TIMEOUT=${REDIS_TIMEOUT:-30s}
+      - REDIS_SSL=${REDIS_SSL:-false}
+      - GIGWA_HOST=${GIGWA_HOST:-http://gigwa:8080}
