@@ -82,8 +82,8 @@ services:
     container_name: mailhog
     restart: always
     ports:
-      - 8025:8025
-      - 1025:1025
+      - ${MAILHOG_WEB_PORT:-8025}:8025
+      - ${MAILHOG_PORT:-1025}:1025
     networks:
       backend:
   bidb: 

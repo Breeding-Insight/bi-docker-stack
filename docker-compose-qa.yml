@@ -17,4 +17,4 @@ services:
       - GIGWA_HOST=${GIGWA_HOST:-http://gigwa:8080}
   bidb:
     ports:
-      - "5432:5432"
+      - ${DB_PORT:-5432}:5432

@@ -39,7 +39,7 @@ docker-compose up -d
 
 ## Pre-Production Environment
 ```
-docker-compose -f docker-compose.yml -f docker-compose-redis.yml -f docker-compose-gigwa.yml -f docker-compose-rc.yml up -d
+docker-compose -f docker-compose.yml -f docker-compose-redis.yml -f docker-compose-gigwa.yml -f docker-compose-qa.yml -f docker-compose-rc.yml up -d
 ```
 
 ## QA Environment
