@@ -2,90 +2,155 @@ version: "3.7"
 
 services:
   biweb:
-    image: biweb
-    build:
-      context: ./bi-web
-      args:
-        HOST_USER_ID: ${USER_ID:-0}
-        HOST_USER_GROUP: ${GROUP_ID:-0}
+    image: breedinginsight/biweb:latest
     container_name: biweb
+    restart: always
     depends_on:
-      - biwaf
-      - biapi-dev
-    volumes:
-      - type: bind
-        source: ./bi-web/src
-        target: /home/host/biweb/src/
-      - type: bind
-        source: ./bi-web/task
-        target: /home/host/biweb/task/
-      - type: bind
-        source: ./bi-web/tests
-        target: /home/host/biweb/tests/
-      - type: bind
-        source: ./bi-web/public
-        target: /home/host/biweb/public/
-    ports:
-      - 8080:8080
+      - biapi
+    environment:
+      - API_BASE_URL=${API_BASE_URL}
+      - ANALYTICS_GTAG_ID=${ANALYTICS_GTAG_ID}
+      - SANDBOX_MODE=${SANDBOX_MODE}
+      - BRAPI_REFERENCE_SOURCE=${BRAPI_REFERENCE_SOURCE}
     networks:
-      backend:
-  biapi-dev:
+      upstream:
+  biapi:
     container_name: biapi
-    build:
-      context: ./bi-api
+    image: breedinginsight/biapi:latest
     depends_on:
       - bidb
-    volumes:
-      - type: bind
-        source: ./bi-api/src
-        target: /biapi/src/
+      - brapi-server
+      - redis
     environment:
-      - PROFILE=dev
-      - DB_SERVER=dbserver:5432
-      - DB_NAME=bidb
-      - DB_USER=postgres
+      - API_INTERNAL_PORT=${API_INTERNAL_PORT:-8081}
+      - DB_SERVER=${DB_SERVER:-dbserver:5432}
+      - DB_NAME=${DB_NAME:-bidb}
+      - DB_USER=${DB_USER:-postgres}
       - DB_PASSWORD=${DB_PASSWORD}
-      - API_INTERNAL_PORT=8081
       - OAUTH_CLIENT_ID=${OAUTH_CLIENT_ID}
-      - JWT_DOMAIN=localhost
+      - JWT_DOMAIN=${JWT_DOMAIN:-localhost}
       - JWT_SECRET=${JWT_SECRET}
       - OAUTH_CLIENT_SECRET=${OAUTH_CLIENT_SECRET}
+      - OAUTH_AUTH_URL=${OAUTH_AUTH_URL:-https://sandbox.orcid.org/oauth/authorize}
+      - OAUTH_TOKEN_URL=${OAUTH_TOKEN_URL:-https://sandbox.orcid.org/oauth/token}
+      - OAUTH_OPENID_ISSUER=${OAUTH_OPENID_ISSUER:-https://sandbox.orcid.org}
+      - OAUTH_OPENID_JWKSURI=${OAUTH_OPENID_JWKSURI:-https://sandbox.orcid.org/oauth/jwks}
+      - OAUTH_OPENID_USERINFOURL=${OAUTH_OPENID_USERINFOURL:-https://sandbox.orcid.org/oauth/userinfo}
+      - BRAPI_DEFAULT_URL=${BRAPI_DEFAULT_URL}
+      - BRAPI_REFERENCE_SOURCE=${BRAPI_REFERENCE_SOURCE}
+      - WEB_BASE_URL=${WEB_BASE_URL}
+      - EMAIL_RELAY_HOST=${EMAIL_RELAY_HOST}
+      - EMAIL_RELAY_PORT=${EMAIL_RELAY_PORT}
+      - EMAIL_FROM=${EMAIL_FROM}
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379}
+      - REDIS_TIMEOUT=${REDIS_TIMEOUT:-30s}
+      - REDIS_SSL=${REDIS_SSL:-false}
+    networks:
+      backend:
+      protected:
+  brapi-server:
+    image: breedinginsight/brapi-java-server:latest
+    container_name: brapi-server
+    depends_on:
+      - bidb
+    environment:
+      - BRAPI_DB_SERVER=${BRAPI_DB_SERVER}
+      - BRAPI_DB=${BRAPI_DB}
+      - BRAPI_DB_USER=${BRAPI_DB_USER}
+      - BRAPI_DB_PASSWORD=${BRAPI_DB_PASSWORD}
+    volumes:
+      - ./brapi-server/application.properties:/home/brapi/properties/application.properties
+      - ./brapi-server/sql/:/home/brapi/sql/
+    networks:
+      backend:
+        aliases:
+          - brapiserver
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:8080/brapi/v2/serverinfo || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: mailhog
+    restart: always
     ports:
-      - 8081:8081
+      - 8025:8025
+      - 1025:1025
+    networks:
+      backend:
+  redis:
+    image: redis
+    container_name: redis
+    restart: always
     networks:
       backend:
   bidb: 
     image: postgres:11.4
     environment:
       POSTGRES_DB: 'bidb'
-      POSTGRES_PASSWORD: 'postgres'
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     container_name: bidb
-    ports:
-      - 5432:5432
     volumes:
-      - biapi_data
+      - type: volume
+        source: biapi_data
+        target: /var/lib/postgresql/data
     networks:
       backend:
         aliases:
           - dbserver  
-  biwaf:
-    image: franbuehler/modsecurity-crs-rp
-    container_name: waf
-    environment:
-      - PORT=8001
-      - BACKEND=http://biweb:8080
-      - PARANOIA=1
-      - ANOMALYIN=5
-      - ANOMALYOUT=4
+  # biwaf:
+  #   image: franbuehler/modsecurity-crs-rp
+  #   container_name: waf
+  #   environment:
+  #     - PORT=8001
+  #     - BACKEND=http://biapi:8081
+  #     - PARANOIA=1
+  #     - ANOMALYIN=5
+  #     - ANOMALYOUT=4
+  #   networks:
+  #     protected:
+  #       aliases:
+  #         - waf
+  #     upstream:
+  #       aliases:
+  #         - waf
+  biproxy:
+    container_name: biproxy    
+    image: biproxy
+    build:
+      dockerfile: biproxy.docker
+      context: ./proxy
+      args:
+        - REGISTERED_DOMAIN=${REGISTERED_DOMAIN:-localhost}
+        - API_IP=biapi:8081
+        - WEB_IP=biweb:8080
+    depends_on:
+      - biapi
+      - biweb
     ports:
-      - 8082:8001
+      - 80:80
+      - 443:443
+    volumes:
+      - type: volume
+        source: tls_certs
+        target: /etc/letsencrypt
+      - type: volume
+        source: proxy_config
+        target: /etc/nginx/conf.d
     networks:
-      backend:
-
+      upstream:
+      protected:
+      
 networks:
+  upstream:
   backend:
-
+  protected:
 
 volumes:
+  proxy_config:
+    name: proxy_config
+  tls_certs:
+    name: tls_certs
   biapi_data:
     name: biapi_data

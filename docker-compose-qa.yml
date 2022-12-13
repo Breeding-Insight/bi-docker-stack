@@ -1,0 +1,13 @@
+version: "3.7"
+
+services:
+  biweb:
+    image: breedinginsight/biweb:develop
+  biapi:
+    image: breedinginsight/biapi:develop
+  bidb:
+    ports:
+      - "5432:5432"
+  redis:
+    ports:
+      - "6379:6379"
