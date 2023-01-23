@@ -1,5 +1,5 @@
 # Prereqs
-Docker and  Docker-compose are both required.
+Docker and Docker-compose are both required.
 
 # Configuration
 The containers are not run by the root user but by a new user and group called
@@ -45,6 +45,19 @@ docker-compose -f docker-compose.yml -f docker-compose-redis.yml -f docker-compo
 ## QA Environment
 ```
 docker-compose -f docker-compose.yml -f docker-compose-redis.yml -f docker-compose-gigwa.yml -f docker-compose-qa.yml up -d
+```
+
+## AWS S3 Configuration
+If running in production, then you will need to create an AWS IAM role to generate an access key and secret.  You will also need to define a bucket in S3 to hold the data.
+
+If you do not want to use AWS, you can utilize the localstack configuration by including `-f docker-compose-localstack.yml` in your `docker-compose up` command.
+
+Then values for the AWS parameters can be set as follows:
+
+```
+AWS_ACCESS_KEY_ID=test
+AWS_SECRET_KEY=test
+AWS_S3_ENDPOINT=http://localhost:4566
 ```
 
 ## TLS Support
