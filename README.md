@@ -1,5 +1,5 @@
 # Prereqs
-Docker and  Docker-compose are both required.
+Docker and Docker-compose are both required.
 
 # Configuration
 The containers are not run by the root user but by a new user and group called
@@ -30,18 +30,34 @@ and save the Lastpass contents for "bi-api secrets" in this file.
 # Run
 
 ## Production Environment
+
+An instance of Redis and Gigwa are expected to be running.  The `.env` file must be updated to reflect where these services live.  To stand up instances of Redis or Gigwa, please refer to their respective docker-compose files (`docker-compose-redis.yml`, `docker-compose-gigwa.yml`)
+
 ```
 docker-compose up -d
 ```
 
 ## Pre-Production Environment
 ```
-docker-compose -f docker-compose.yml -f docker-compose-rc.yml up -d
+docker-compose -f docker-compose.yml -f docker-compose-redis.yml -f docker-compose-gigwa.yml -f docker-compose-qa.yml -f docker-compose-rc.yml up -d
 ```
 
 ## QA Environment
 ```
-docker-compose -f docker-compose.yml -f docker-compose-qa.yml up -d
+docker-compose -f docker-compose.yml -f docker-compose-redis.yml -f docker-compose-gigwa.yml -f docker-compose-qa.yml up -d
+```
+
+## AWS S3 Configuration
+If running in production, then you will need to create an AWS IAM role to generate an access key and secret.  You will also need to define a bucket in S3 to hold the data.
+
+If you do not want to use AWS, you can utilize the localstack configuration by including `-f docker-compose-localstack.yml` in your `docker-compose up` command.
+
+Then values for the AWS parameters can be set as follows:
+
+```
+AWS_ACCESS_KEY_ID=test
+AWS_SECRET_KEY=test
+AWS_S3_ENDPOINT=http://localhost:4566
 ```
 
 ## TLS Support
@@ -85,5 +101,5 @@ git submodule update --init --recursive
 Then run:
 
 ```
-docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+docker-compose -f docker-compose.yml -f docker-compose-redis.yml -f docker-compose-gigwa.yml -f docker-compose-dev.yml up -d
 ```

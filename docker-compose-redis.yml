@@ -1,0 +1,11 @@
+version: "3.7"
+
+services:
+  redis:
+    image: redis
+    container_name: ${REDIS_CONTAINER_NAME:-redis}
+    ports:
+      - ${REDIS_PORT:-6379}:6379
+    restart: always
+    networks:
+      backend:

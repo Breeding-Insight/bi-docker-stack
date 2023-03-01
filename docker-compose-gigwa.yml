@@ -1,0 +1,46 @@
+version: "3.7"
+
+services:
+  gigwa:
+    depends_on:
+      - mongo
+    image: breedinginsight/gigwa:develop
+    container_name: ${GIGWA_CONTAINER_NAME:-gigwa}
+    ports:
+      - ${GIGWA_PORT:-5080}:8080
+    restart: always
+    environment:
+      MONGO_IP: ${GIGWA_CONTAINER_NAME:-gigwa}_db
+      MONGO_PORT: 27017
+      MONGO_INITDB_ROOT_USERNAME: ${GIGWA_MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${GIGWA_MONGO_PASSWORD}
+      HOST_LOCALE: "${LANG}"
+      GIGWA.serversAllowedToImport: ${BRAPI_REFERENCE_SOURCE}
+    networks:
+      backend:
+    volumes:
+      - type: volume
+        source: gigwa_data
+        target: /usr/local/tomcat/config
+  mongo:
+    image: mongo:4.2.21
+    container_name: ${GIGWA_CONTAINER_NAME:-gigwa}_db
+    restart: always
+    command: --profile 0 --slowms 60000 --storageEngine wiredTiger --wiredTigerCollectionBlockCompressor=zstd --directoryperdb --quiet
+    ports:
+      - ${GIGWA_MONGO_PORT:-27017}:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${GIGWA_MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${GIGWA_MONGO_PASSWORD}
+    volumes:
+      - type: volume
+        source: gigwa_mongo_data
+        target: /data/db
+    networks:
+      backend:
+
+volumes:
+  gigwa_data:
+    name: ${GIGWA_CONTAINER_NAME:-gigwa}_data
+  gigwa_mongo_data:
+    name: ${GIGWA_CONTAINER_NAME:-gigwa}_mongo_data
