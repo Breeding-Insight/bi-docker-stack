@@ -51,6 +51,7 @@ services:
       - GITHUB_ACTOR=${GITHUB_ACTOR}
       - GITHUB_TOKEN=${GITHUB_TOKEN}
   brapi-server:
+    image: breedinginsight/brapi-java-server:develop
     volumes:
       - ./bi-api/src/main/resources/brapi/properties/application.properties:/home/brapi/properties/application.properties
       - ./bi-api/src/main/resources/brapi/sql/:/home/brapi/sql/
