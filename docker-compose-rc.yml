@@ -7,3 +7,5 @@ services:
     image: breedinginsight/biweb:rc
   biapi:
     image: breedinginsight/biapi:rc
+  brapi-server:
+    image: breedinginsight/brapi-java-server:rc
