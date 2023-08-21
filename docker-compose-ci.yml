@@ -31,6 +31,7 @@ services:
       - REDIS_SSL=${REDIS_SSL:-false}
       - GIGWA_HOST=${GIGWA_HOST:-http://gigwa:8080}
   brapi-server:
+    image: breedinginsight/brapi-java-server:develop
     ports:
       - ${BRAPI_SERVER_PORT:-8080}:8080
   bidb:
