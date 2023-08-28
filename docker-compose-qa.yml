@@ -1,6 +1,8 @@
 version: "3.7"
 
 services:
+  gigwa:
+    image: breedinginsight/gigwa:develop
   biweb:
     image: breedinginsight/biweb:develop
   biapi:

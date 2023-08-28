@@ -4,7 +4,7 @@ services:
   gigwa:
     depends_on:
       - mongo
-    image: breedinginsight/gigwa:develop
+    image: breedinginsight/gigwa:latest
     container_name: ${GIGWA_CONTAINER_NAME:-gigwa}
     ports:
       - ${GIGWA_PORT:-5080}:8080
