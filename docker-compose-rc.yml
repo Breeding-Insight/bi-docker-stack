@@ -1,7 +1,11 @@
 version: "3.7"
 
 services:
+  gigwa:
+    image: breedinginsight/gigwa:rc
   biweb:
     image: breedinginsight/biweb:rc
   biapi:
     image: breedinginsight/biapi:rc
+  brapi-server:
+    image: breedinginsight/brapi-java-server:rc
