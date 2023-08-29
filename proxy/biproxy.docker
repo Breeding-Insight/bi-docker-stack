@@ -64,14 +64,6 @@ server {\n\
 >> breedinginsight.net.conf
 RUN rm /etc/nginx/conf.d/default.conf
 
-# Obtain cert (will renew if it already exists and is close to expiry).
-# If CERT_REGISTRATION_EMAIL is null or empty, register without email (not recommended).
-RUN if [ -n "$CERT_REGISTRATION_EMAIL" ]; then \
-      certbot run --nginx --non-interactive --domain ${REGISTERED_DOMAIN} --email ${CERT_REGISTRATION_EMAIL} --agree-tos  --keep-until-expiring --no-eff-email; \
-    else \
-      certbot run --nginx --non-interactive --domain ${REGISTERED_DOMAIN} --register-unsafely-without-email --agree-tos  --keep-until-expiring; \
-    fi
-
 # Install supercronic-linux-amd64.
 # Latest releases available at https://github.com/aptible/supercronic/releases.
 ENV SUPERCRONIC_URL=https://github.com/aptible/supercronic/releases/download/v0.2.26/supercronic-linux-amd64 \
