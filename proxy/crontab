@@ -1,0 +1,2 @@
+# Run cerbot renew non-interactively daily at 2:24.
+24 2 * * * certbot renew --quiet

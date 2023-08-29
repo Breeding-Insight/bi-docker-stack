@@ -5,6 +5,7 @@ FROM nginx@sha256:a98c2360dcfe44e9987ed09d59421bb654cb6c4abe50a92ec9c912f2524614
 RUN echo "deb http://ftp.debian.org/debian buster-backports main" >> /etc/apt/sources.list
 RUN apt-get update
 RUN apt install -y python-certbot-nginx -t buster-backports
+ARG CERT_REGISTRATION_EMAIL
 ARG REGISTERED_DOMAIN
 ARG API_IP
 ARG WEB_IP
@@ -62,3 +63,29 @@ server {\n\
 }\n"\
 >> breedinginsight.net.conf
 RUN rm /etc/nginx/conf.d/default.conf
+
+# Obtain cert (will renew if it already exists and is close to expiry).
+# If CERT_REGISTRATION_EMAIL is null or empty, register without email (not recommended).
+RUN if [[ -n $CERT_REGISTRATION_EMAIL ]]; then \
+      certbot run --nginx --non-interactive --domain ${REGISTERED_DOMAIN} --email ${CERT_REGISTRATION_EMAIL} --agree-tos  --keep-until-expiring --no-eff-email; \
+    else \
+      certbot run --nginx --non-interactive --domain ${REGISTERED_DOMAIN} --register-unsafely-without-email --agree-tos  --keep-until-expiring; \
+    fi
+
+# Install supercronic-linux-amd64.
+# Latest releases available at https://github.com/aptible/supercronic/releases.
+ENV SUPERCRONIC_URL=https://github.com/aptible/supercronic/releases/download/v0.2.26/supercronic-linux-amd64 \
+    SUPERCRONIC=supercronic-linux-amd64 \
+    SUPERCRONIC_SHA1SUM=7a79496cf8ad899b99a719355d4db27422396735
+
+RUN curl -fsSLO "$SUPERCRONIC_URL" \
+ && echo "${SUPERCRONIC_SHA1SUM}  ${SUPERCRONIC}" | sha1sum -c - \
+ && chmod +x "$SUPERCRONIC" \
+ && mv "$SUPERCRONIC" "/usr/local/bin/${SUPERCRONIC}" \
+ && ln -s "/usr/local/bin/${SUPERCRONIC}" /usr/local/bin/supercronic
+
+ # Copy crontab.
+ COPY crontab .
+
+# Point supercronic to contab.
+RUN supercronic crontab
