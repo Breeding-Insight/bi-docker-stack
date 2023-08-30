@@ -124,7 +124,6 @@ services:
       dockerfile: biproxy.docker
       context: ./proxy
       args:
-        - CERT_REGISTRATION_EMAIL=${CERT_REGISTRATION_EMAIL}
         - REGISTERED_DOMAIN=${REGISTERED_DOMAIN:-localhost}
         - API_IP=biapi:8081
         - WEB_IP=biweb:8080
