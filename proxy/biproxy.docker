@@ -62,3 +62,7 @@ server {\n\
 }\n"\
 >> breedinginsight.net.conf
 RUN rm /etc/nginx/conf.d/default.conf
+
+# Start cron service and run init scripts for nginx.
+# (The default command for this image is `/docker-entrypoint.sh nginx -g 'daemon off;'`.)
+CMD service cron start && /docker-entrypoint.sh nginx -g 'daemon off;'
