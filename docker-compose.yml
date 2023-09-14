@@ -140,6 +140,11 @@ services:
       - type: volume
         source: proxy_config
         target: /etc/nginx/conf.d
+    healthcheck:
+      test: ["CMD-SHELL", "curl -so /dev/null http://localhost/ || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       upstream:
       protected:
