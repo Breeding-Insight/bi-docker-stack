@@ -17,6 +17,7 @@ services:
   biapi:
     container_name: biapi
     image: breedinginsight/biapi:latest
+    restart: always
     depends_on:
       - bidb
       - brapi-server
@@ -59,6 +60,7 @@ services:
   brapi-server:
     image: breedinginsight/brapi-java-server:latest
     container_name: brapi-server
+    restart: always
     depends_on:
       - bidb
     environment:
@@ -93,6 +95,7 @@ services:
       POSTGRES_DB: 'bidb'
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     container_name: bidb
+    restart: always
     volumes:
       - type: volume
         source: biapi_data
@@ -120,6 +123,7 @@ services:
   biproxy:
     container_name: biproxy    
     image: biproxy
+    restart: always
     build:
       dockerfile: biproxy.docker
       context: ./proxy
