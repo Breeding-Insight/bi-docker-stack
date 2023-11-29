@@ -12,6 +12,7 @@ services:
       - ANALYTICS_GTAG_ID=${ANALYTICS_GTAG_ID}
       - SANDBOX_MODE=${SANDBOX_MODE}
       - BRAPI_REFERENCE_SOURCE=${BRAPI_REFERENCE_SOURCE}
+      - BRAPI_VENDOR_SUBMISSION_ENABLED=${BRAPI_VENDOR_SUBMISSION_ENABLED:-false}
     networks:
       upstream:
   biapi:
@@ -53,6 +54,7 @@ services:
       - AWS_SECRET_KEY=${AWS_SECRET_KEY}
       - AWS_GENO_BUCKET=${AWS_GENO_BUCKET}
       - AWS_S3_ENDPOINT=${AWS_S3_ENDPOINT:-https://s3.us-east-1.amazonaws.com}
+      - BRAPI_VENDOR_SUBMISSION_ENABLED=${BRAPI_VENDOR_SUBMISSION_ENABLED:-false}
     networks:
       backend:
       protected:
