@@ -36,7 +36,7 @@ services:
     volumes:
       - type: bind
         source: ./bi-api/
-        target: /biapi/
+        target: /home/host/biapi/
       - type: bind
         source: /var/run/docker.sock
         target: /var/run/docker.sock
@@ -44,12 +44,13 @@ services:
         source: /usr/bin/docker
         target: /usr/bin/docker
       - type: bind
-        source: ${HOME}/.m2
+        source: .m2
         #target: /home/host/.m2
         target: /root/.m2
     environment:
       - GITHUB_ACTOR=${GITHUB_ACTOR}
       - GITHUB_TOKEN=${GITHUB_TOKEN}
+      - API_BASE_URL=${API_BASE_URL}
   brapi-server:
     image: breedinginsight/brapi-java-server:develop
     volumes:

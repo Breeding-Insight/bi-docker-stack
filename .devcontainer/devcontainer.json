@@ -1,0 +1,32 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/universal
+{
+	"name": "BI Development (Default Base)",
+	"image": "mcr.microsoft.com/devcontainers/universal:2-linux",
+	"features": {
+		"ghcr.io/wxw-matt/devcontainer-features/command_runner:0": {},
+		"ghcr.io/devcontainers/features/node:1": {
+			"version": "12.22.12"
+		}
+	},
+	
+	"customizations": {
+		"codespaces": {
+			"repositories": {
+			  "Breeding-Insight/bi-web": {
+				"permissions": "write-all"
+			  },
+			  "Breeding-Insight/bi-api": {
+				"permissions": "write-all"
+			  }
+			}
+		}
+	},
+
+	// Use 'postCreateCommand' to run commands after the container is created.
+	"postCreateCommand": "./.devcontainer/startbiweb.sh",
+
+	//Use 'postAttachCommand' to run commands after the container is attached.
+	"postAttachCommand": "./.devcontainer/startbiapi.sh" //runs container but something wrong...
+	//"postStartCommand": "./.devcontainer/startbiapi.sh" 
+}
