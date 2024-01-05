@@ -23,10 +23,30 @@
 		}
 	},
 
+	"containerEnv": {
+		"API_BASE_URL": "https://${localEnv:CODESPACE_NAME}-80.${localEnv:GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}",
+		"WEB_BASE_URL": "https://${localEnv:CODESPACE_NAME}-80.${localEnv:GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}",
+		"JWT_DOMAIN": "${localEnv:CODESPACE_NAME}-80.${localEnv:GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}"
+	},
+
+	//Note that label vanishes when port visibility changes
+	//Tragically no way here to set port visibility yet
+	"portsAttributes": {
+		"80": {
+			"label": "DeltaBreed"
+		},
+		"8025": {
+			"label": "Mailhog"
+		}
+	},
+
+	// Clean up images
+	// Only uncomment when getting "ApplyLayer exit status 1...no space left on device" error
+	//"initializeCommand": "docker system prune --all --force",
+
 	// Use 'postCreateCommand' to run commands after the container is created.
 	"postCreateCommand": "./.devcontainer/startbiweb.sh",
 
 	//Use 'postAttachCommand' to run commands after the container is attached.
-	"postAttachCommand": "./.devcontainer/startbiapi.sh" //runs container but something wrong...
-	//"postStartCommand": "./.devcontainer/startbiapi.sh" 
+	"postAttachCommand": "./.devcontainer/startbiapi.sh"
 }
