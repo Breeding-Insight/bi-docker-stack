@@ -1,5 +1,6 @@
 .env
 **/*.org
 m2/
+.m2/
 .env.local
 docker-compose-local.yml

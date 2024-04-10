@@ -12,6 +12,7 @@ services:
       - ANALYTICS_GTAG_ID=${ANALYTICS_GTAG_ID}
       - SANDBOX_MODE=${SANDBOX_MODE}
       - BRAPI_REFERENCE_SOURCE=${BRAPI_REFERENCE_SOURCE}
+      - BRAPI_VENDOR_SUBMISSION_ENABLED=${BRAPI_VENDOR_SUBMISSION_ENABLED:-false}
     networks:
       upstream:
   biapi:
@@ -54,6 +55,7 @@ services:
       - AWS_SECRET_KEY=${AWS_SECRET_KEY}
       - AWS_GENO_BUCKET=${AWS_GENO_BUCKET}
       - AWS_S3_ENDPOINT=${AWS_S3_ENDPOINT:-https://s3.us-east-1.amazonaws.com}
+      - BRAPI_VENDOR_SUBMISSION_ENABLED=${BRAPI_VENDOR_SUBMISSION_ENABLED:-false}
     networks:
       backend:
       protected:
@@ -69,8 +71,8 @@ services:
       - BRAPI_DB_USER=${BRAPI_DB_USER}
       - BRAPI_DB_PASSWORD=${BRAPI_DB_PASSWORD}
     volumes:
-      - ./brapi-server/application.properties:/home/brapi/properties/application.properties
-      - ./brapi-server/sql/:/home/brapi/sql/
+      - ./bi-api/src/main/resources/brapi/properties/application.properties:/home/brapi/properties/application.properties
+      - ./bi-api/src/main/resources/brapi/sql:/home/brapi/db/sql
     networks:
       backend:
         aliases:
@@ -103,7 +105,8 @@ services:
     networks:
       backend:
         aliases:
-          - dbserver  
+          - dbserver
+    shm_size: 2g
   # biwaf:
   #   image: franbuehler/modsecurity-crs-rp
   #   container_name: waf
