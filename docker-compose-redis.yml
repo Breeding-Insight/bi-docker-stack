@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   redis:
-    image: redis
+    image: redis:7.2.0
     container_name: ${REDIS_CONTAINER_NAME:-redis}
     ports:
       - ${REDIS_PORT:-6379}:6379
