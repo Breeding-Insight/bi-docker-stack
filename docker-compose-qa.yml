@@ -22,3 +22,12 @@ services:
   bidb:
     ports:
       - ${DB_PORT:-5432}:5432
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: mailhog
+    restart: always
+    ports:
+      - ${MAILHOG_WEB_PORT:-8025}:8025
+      - ${MAILHOG_PORT:-1025}:1025
+    networks:
+      backend:
