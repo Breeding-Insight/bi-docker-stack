@@ -30,6 +30,15 @@ services:
       - REDIS_TIMEOUT=${REDIS_TIMEOUT:-30s}
       - REDIS_SSL=${REDIS_SSL:-false}
       - GIGWA_HOST=${GIGWA_HOST:-http://gigwa:8080}
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: mailhog
+    restart: always
+    ports:
+      - ${MAILHOG_WEB_PORT:-8025}:8025
+      - ${MAILHOG_PORT:-1025}:1025
+    networks:
+      backend:
   brapi-server:
     image: breedinginsight/brapi-java-server:develop
     ports:
