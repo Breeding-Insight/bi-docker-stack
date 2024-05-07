@@ -1,10 +1,8 @@
 #FROM nginx:1.20
-#temporary fix to use specific nginx image
-FROM nginx@sha256:a98c2360dcfe44e9987ed09d59421bb654cb6c4abe50a92ec9c912f252461483
+FROM nginx:stable-bookworm
 
-RUN echo "deb http://ftp.debian.org/debian buster-backports main" >> /etc/apt/sources.list
 RUN apt-get update
-RUN apt install -y cron python-certbot-nginx -t buster-backports
+RUN apt install -y cron python3-certbot-nginx
 ARG REGISTERED_DOMAIN
 ARG API_IP
 ARG WEB_IP
