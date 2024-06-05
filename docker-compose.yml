@@ -43,6 +43,8 @@ services:
       - WEB_BASE_URL=${WEB_BASE_URL}
       - EMAIL_RELAY_HOST=${EMAIL_RELAY_HOST}
       - EMAIL_RELAY_PORT=${EMAIL_RELAY_PORT}
+      - EMAIL_RELAY_LOGIN=${EMAIL_RELAY_LOGIN}
+      - EMAIL_RELAY_PASSWORD=${EMAIL_RELAY_PASSWORD}
       - EMAIL_FROM=${EMAIL_FROM}
       - REDIS_URL=${REDIS_URL}
       - REDIS_TIMEOUT=${REDIS_TIMEOUT:-30s}
@@ -82,15 +84,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-  mailhog:
-    image: mailhog/mailhog:latest
-    container_name: mailhog
-    restart: always
-    ports:
-      - ${MAILHOG_WEB_PORT:-8025}:8025
-      - ${MAILHOG_PORT:-1025}:1025
-    networks:
-      backend:
   bidb: 
     image: postgres:11.4
     environment:
