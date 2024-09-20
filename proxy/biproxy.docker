@@ -33,6 +33,9 @@ upstream web {\n\
 server {\n\
     server_name ${REGISTERED_DOMAIN};\n\
 \n\
+    location /.well-known/acme-challenge/ {\n\
+        root /usr/share/nginx/html;\n\
+    }\n\    
     location /v1 {\n\
         proxy_pass http://api;\n\
         include /etc/nginx/conf.d/proxy-headers.conf;\n\
