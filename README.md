@@ -1,5 +1,20 @@
+<div align="center">
+    <img src="./images/DeltaBreed.svg" alt="DeltaBreed Logo" width="300">
+</div>
+
+<h2 align="center">
+    This repo contains the docker-compose configurations used to run DeltaBreed.
+</h2>
+
 # Prereqs
 Docker and Docker-compose are both required.
+
+# Architecture
+The primary components of DeltaBreed are the Web UI (Breeding-Insight/bi-web) and the API (Breeding-Insight/bi-api).
+The [BrAPI Java Server](https://github.com/plantbreeding/brapi-Java-TestServer) is used for phenotypic data storage, [Gigwa](https://github.com/SouthGreenPlatform/Gigwa2) is used for genotypic data storage, and interoperability with external applications such as [Field Book](https://github.com/PhenoApps/Field-Book/) is enabled by [BrAPI](https://brapi.org/).
+DeltaBreed uses [ORCID](https://orcid.org/) for authentication.
+
+![DeltaBreed v1.0 architecture diagram.](./images/architecture.1.0.png)
 
 # Configuration
 The containers are not run by the root user but by a new user and group called
