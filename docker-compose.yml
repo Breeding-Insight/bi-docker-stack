@@ -85,7 +85,7 @@ services:
       timeout: 5s
       retries: 5
   bidb: 
-    image: postgres:11.4
+    image: postgres:17
     environment:
       POSTGRES_DB: 'bidb'
       POSTGRES_PASSWORD: ${DB_PASSWORD}
