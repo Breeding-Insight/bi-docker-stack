@@ -58,6 +58,8 @@ services:
       - AWS_GENO_BUCKET=${AWS_GENO_BUCKET}
       - AWS_S3_ENDPOINT=${AWS_S3_ENDPOINT:-https://s3.us-east-1.amazonaws.com}
       - BRAPI_VENDOR_SUBMISSION_ENABLED=${BRAPI_VENDOR_SUBMISSION_ENABLED:-false}
+      - CACHE_PAGINATE_GERMPLASM=${CACHE_PAGINATE_GERMPLASM:-false}
+      - CACHE_BRAPI_FETCH_PAGE_SIZE=${CACHE_BRAPI_FETCH_PAGE_SIZE:-65000}
     networks:
       backend:
       protected:
@@ -85,7 +87,7 @@ services:
       timeout: 5s
       retries: 5
   bidb: 
-    image: postgres:17
+    image: postgres:17.5
     environment:
       POSTGRES_DB: 'bidb'
       POSTGRES_PASSWORD: ${DB_PASSWORD}
