@@ -6,8 +6,62 @@
     This repo contains the docker-compose configurations used to run DeltaBreed.
 </h2>
 
-# Prereqs
+# <a id="get_started"></a>Getting Started
+## Outline
+<ul>
+<li>Download prereqs</li>
+<li>Set up OAuth with ORCID</li>
+<li>Set up environmental variables</li>
+<li>Run docker-compose</li>
+<li>Get ORCID credentials into database</li>
+<li>Access DeltaBreed on web</li>
+</ul>
+
+## Download Prereqs
 Docker and Docker-compose are both required.
+
+## Set up OAuth with ORCID
+Running DeltaBreed requires setting up OAuth with ORCID (Open Researcher and Contributor ID), --this is what orcid is--
+
+TODO steps
+
+## Set up environmental variables
+To set necessary private environmental variables for DeltaBreed to run, at the root level of the repo locally create a file called `.env`.
+
+(a template exists named `.env.template` todo check if .env.quicktemplate might be better alternative)
+
+The containers are not run by the root user but by a new user and group called
+'host'.  The user and group ids for host are both set to 1001 by default.  If
+you wish to change these to your own user and group ids, add the following
+contents to .env:
+```
+USER_ID=1001
+GROUP_ID=1001
+```
+Change 1001 to your own id values.  You can find at the console your user and group ids using the id command:
+for user id
+```
+id -u
+```
+and for group id
+```
+id -g
+```
+
+todo remaining variables that need extra guidance
+
+## Run docker-compose
+Run the following in the bi-docker-stack repository
+
+```
+docker-compose -f docker-compose.yml -f docker-compose-redis.yml -f docker-compose-gigwa.yml -f docker-compose-mailhog.yml up -d
+```
+
+## Get ORCID credentials into database
+Run this shell script (TODO)
+
+## Access DeltaBreed on web
+DeltaBreed can then be accessed via the url entered for ```WEB_BASE_URL``` in the .env file.
 
 # Architecture
 The primary components of DeltaBreed are the Web UI (Breeding-Insight/bi-web) and the API (Breeding-Insight/bi-api).
