@@ -35,7 +35,7 @@ Running DeltaBreed requires setting up OAuth with [ORCID](https://info.orcid.org
 <li>Sign into ORCID</li>
 <li>Go to "Developer Tools"</li>
 <li>Agree to Terms of Service and register for ORCID public API credentials</li>
-<li>Enter application name and description (todo check if any requirements)</li>
+<li>Enter application name and description (no particular requirements)</li>
 <li>Enter application URL <code>http://test.localhost:8080</code> (todo check this can work)</li>
 <li>Add Redirect URI <code>http://test.localhost:8081/sso/success/orcid</code></li>
 <li>Select "Save application" at the bottom of the page</li>
@@ -73,7 +73,7 @@ id -g
 Run the following in the bi-docker-stack repository
 
 ```
-docker-compose -f docker-compose.yml -f docker-compose-redis.yml -f docker-compose-gigwa.yml -f docker-compose-mailhog.yml up -d
+docker-compose -f docker-compose.yml -f docker-compose-redis.yml -f docker-compose-gigwa.yml -f docker-compose-localstack.yml -f docker-compose-mailhog.yml -f docker-compose-qa.yml up -d --build
 ```
 
 ## Get ORCID credentials into database
