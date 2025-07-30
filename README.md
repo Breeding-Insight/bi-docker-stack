@@ -36,8 +36,8 @@ Running DeltaBreed requires setting up OAuth with [ORCID](https://info.orcid.org
 <li>Go to "Developer Tools"</li>
 <li>Agree to Terms of Service and register for ORCID public API credentials</li>
 <li>Enter application name and description (no particular requirements)</li>
-<li>Enter application URL <code>http://test.localhost:8080</code> (todo check this can work)</li>
-<li>Add Redirect URI <code>http://test.localhost:8081/sso/success/orcid</code></li>
+<li>Enter application URL <code>http://test.localhost:8080</code></li>
+<li>Add Redirect URI <code>http://test.localhost/sso/success/orcid</code></li>
 <li>Select "Save application" at the bottom of the page</li>
 <li>Copy the generated Client ID and Client Secret to add to the .env file (see <a href="env_vars">Set up environmental variables</a>)</li>
 </ol>
@@ -47,27 +47,7 @@ To set necessary private environmental variables for DeltaBreed to run, at the r
 A template exists named `.env.quicktemplate` that has most environmental variables already filled. 
 If a user wants to customize services in more depth (not covered in this quick start guide), they can instead base their `.env` off of `.env.template`.
 
-The following is guidance for filling out remaining parts of `.env.quicktemplate`.
-
-(TODO remaining vars)
-
-The containers are not run by the root user but by a new user and group called
-'host'.  The user and group ids for host are both set to 1001 by default.  If
-you wish to change these to your own user and group ids, add the following
-contents to .env:
-```
-USER_ID=1001
-GROUP_ID=1001
-```
-Change 1001 to your own id values.  You can find at the console your user and group ids using the id command:
-for user id
-```
-id -u
-```
-and for group id
-```
-id -g
-```
+In this new `.env` based off the template, set `OAUTH_CLIENT_ID` and `OAUTH_CLIENT_SECRET` to the generated Client ID and Client Secret copied in the previous step
 
 ## Run docker-compose
 Run the following in the bi-docker-stack repository
@@ -82,7 +62,7 @@ For Mac/Linux, run `addUser.sh`
 For Windows, run `addUser.ps1`
 
 ## Access DeltaBreed on web
-DeltaBreed can then be accessed via the url entered for ```WEB_BASE_URL``` in the .env file.
+DeltaBreed can then be accessed via `http://localhost:8080`. 
 
 # <a id="architecture"></a> Architecture
 The primary components of DeltaBreed are the Web UI (Breeding-Insight/bi-web) and the API (Breeding-Insight/bi-api).
@@ -165,3 +145,22 @@ The Dockerfile for the reverse proxy contains the nginx rules used to direct
 traffic to the appropriate upstream server. Any new features added to bi-api
 that use an endpoint not in the /v1/ or /sso/ name spaces must have a rule added
 to the proxy config in order to send these requests upstream.
+
+## User Configuration
+The containers are not run by the root user but by a new user and group called
+'host'.  The user and group ids for host are both set to 1001 by default.  If
+you wish to change these to your own user and group ids, add the following
+contents to .env:
+```
+USER_ID=1001
+GROUP_ID=1001
+```
+Change 1001 to your own id values.  You can find at the console your user and group ids using the id command:
+for user id
+```
+id -u
+```
+and for group id
+```
+id -g
+```
