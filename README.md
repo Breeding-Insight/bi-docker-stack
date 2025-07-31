@@ -44,8 +44,7 @@ Running DeltaBreed requires setting up OAuth with [ORCID](https://info.orcid.org
 
 ## <a id="env_vars"></a>Set up environment variables
 To set necessary private environment variables for DeltaBreed to run, at the root level of the repo locally create a file called `.env`. 
-A template exists named `.env.quicktemplate` that has most environment variables already filled. 
-If a user wants to customize services in more depth (not covered in this quick start guide), they can instead base their `.env` off of `.env.template`.
+A template exists named `.env.template` that has most environment variables already filled. 
 
 In this new `.env` based off the template, set `OAUTH_CLIENT_ID` and `OAUTH_CLIENT_SECRET` to the generated Client ID and Client Secret copied in the previous step
 
