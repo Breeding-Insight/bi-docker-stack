@@ -18,7 +18,7 @@
 <ul>
 <li>Download prereqs</li>
 <li>Set up OAuth with ORCID</li>
-<li>Set up environmental variables</li>
+<li>Set up environment variables</li>
 <li>Run docker-compose</li>
 <li>Get ORCID credentials into database</li>
 <li>Access DeltaBreed on web</li>
@@ -36,15 +36,15 @@ Running DeltaBreed requires setting up OAuth with [ORCID](https://info.orcid.org
 <li>Go to "Developer Tools"</li>
 <li>Agree to Terms of Service and register for ORCID public API credentials</li>
 <li>Enter application name and description (no particular requirements)</li>
-<li>Enter application URL <code>http://test.localhost:8080</code></li>
-<li>Add Redirect URI <code>http://test.localhost/sso/success/orcid</code></li>
+<li>Enter application URL <code>http://deltabreed.localhost:8080</code></li>
+<li>Add Redirect URI <code>http://deltabreed.localhost/sso/success/orcid</code></li>
 <li>Select "Save application" at the bottom of the page</li>
-<li>Copy the generated Client ID and Client Secret to add to the .env file (see <a href="env_vars">Set up environmental variables</a>)</li>
+<li>Copy the generated Client ID and Client Secret to add to the .env file (see <a href="env_vars">Set up environment variables</a>)</li>
 </ol>
 
-## <a id="env_vars"></a>Set up environmental variables
-To set necessary private environmental variables for DeltaBreed to run, at the root level of the repo locally create a file called `.env`. 
-A template exists named `.env.quicktemplate` that has most environmental variables already filled. 
+## <a id="env_vars"></a>Set up environment variables
+To set necessary private environment variables for DeltaBreed to run, at the root level of the repo locally create a file called `.env`. 
+A template exists named `.env.quicktemplate` that has most environment variables already filled. 
 If a user wants to customize services in more depth (not covered in this quick start guide), they can instead base their `.env` off of `.env.template`.
 
 In this new `.env` based off the template, set `OAUTH_CLIENT_ID` and `OAUTH_CLIENT_SECRET` to the generated Client ID and Client Secret copied in the previous step
@@ -57,12 +57,14 @@ docker-compose -f docker-compose.yml -f docker-compose-redis.yml -f docker-compo
 ```
 
 ## Get ORCID credentials into database
+To get ORCID credentials into the database, an interactive script must be run that prompts the user to input their ORCID and email.
+
 For Mac/Linux, run `addUser.sh`
 
 For Windows, run `addUser.ps1`
 
 ## Access DeltaBreed on web
-DeltaBreed can then be accessed via `http://localhost:8080`. 
+DeltaBreed can then be accessed via `http://deltabreed.localhost:8080`. 
 
 # <a id="architecture"></a> Architecture
 The primary components of DeltaBreed are the Web UI (Breeding-Insight/bi-web) and the API (Breeding-Insight/bi-api).
