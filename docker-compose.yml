@@ -63,7 +63,6 @@ services:
       - BRAPI_VENDOR_SUBMISSION_ENABLED=${BRAPI_VENDOR_SUBMISSION_ENABLED:-false}
       - CACHE_PAGINATE_GERMPLASM=${CACHE_PAGINATE_GERMPLASM:-false}
       - CACHE_BRAPI_FETCH_PAGE_SIZE=${CACHE_BRAPI_FETCH_PAGE_SIZE:-65000}
-      - FLYWAY_LOCATIONS=${FLYWAY_LOCATIONS:-classpath:org/breedinginsight/db/migration,classpath:db/migration}
     networks:
       backend:
       protected:
