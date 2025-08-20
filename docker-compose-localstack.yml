@@ -6,6 +6,7 @@ services:
     image: localstack/localstack:3.0.2
     ports:
       - "4566:4566"
+    restart: always
     networks:
       backend:
         aliases:
