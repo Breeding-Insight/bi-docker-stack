@@ -13,6 +13,7 @@ services:
       - SANDBOX_MODE=${SANDBOX_MODE}
       - BRAPI_REFERENCE_SOURCE=${BRAPI_REFERENCE_SOURCE}
       - BRAPI_VENDOR_SUBMISSION_ENABLED=${BRAPI_VENDOR_SUBMISSION_ENABLED:-false}
+      - ALTERNATE_AUTHENTICATION_ENABLED=${ALTERNATE_AUTHENTICATION_ENABLED:-false}
     networks:
       upstream:
   biapi:
@@ -37,6 +38,8 @@ services:
       - OAUTH_OPENID_ISSUER=${OAUTH_OPENID_ISSUER:-https://sandbox.orcid.org}
       - OAUTH_OPENID_JWKSURI=${OAUTH_OPENID_JWKSURI:-https://sandbox.orcid.org/oauth/jwks}
       - OAUTH_OPENID_USERINFOURL=${OAUTH_OPENID_USERINFOURL:-https://sandbox.orcid.org/oauth/userinfo}
+      - GITHUB_OAUTH_CLIENT_ID=${GITHUB_OAUTH_CLIENT_ID}
+      - GITHUB_OAUTH_CLIENT_SECRET=${GITHUB_OAUTH_CLIENT_SECRET}
       - BRAPI_DEFAULT_URL=${BRAPI_DEFAULT_URL}
       - BRAPI_REFERENCE_SOURCE=${BRAPI_REFERENCE_SOURCE}
       - BRAPI_READ_TIMEOUT=${BRAPI_READ_TIMEOUT:-10m}
@@ -58,6 +61,8 @@ services:
       - AWS_GENO_BUCKET=${AWS_GENO_BUCKET}
       - AWS_S3_ENDPOINT=${AWS_S3_ENDPOINT:-https://s3.us-east-1.amazonaws.com}
       - BRAPI_VENDOR_SUBMISSION_ENABLED=${BRAPI_VENDOR_SUBMISSION_ENABLED:-false}
+      - CACHE_PAGINATE_GERMPLASM=${CACHE_PAGINATE_GERMPLASM:-false}
+      - CACHE_BRAPI_FETCH_PAGE_SIZE=${CACHE_BRAPI_FETCH_PAGE_SIZE:-65000}
     networks:
       backend:
       protected:
@@ -85,7 +90,7 @@ services:
       timeout: 5s
       retries: 5
   bidb: 
-    image: postgres:11.4
+    image: postgres:17.5
     environment:
       POSTGRES_DB: 'bidb'
       POSTGRES_PASSWORD: ${DB_PASSWORD}
