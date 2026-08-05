@@ -13,3 +13,6 @@ services:
           - localstack
     environment:
       - LOCALSTACK_HOST=localstack
+      - PERSISTENCE=1
+    volumes:
+      - localstack_data:/var/lib/localstack
