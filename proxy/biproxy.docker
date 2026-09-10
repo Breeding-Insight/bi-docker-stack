@@ -16,7 +16,7 @@ proxy_http_version 1.1;\n\
 proxy_set_header Connection \"\";\n\
 proxy_buffering off;\n\
 proxy_request_buffering off;\n\
-client_max_body_size 100M;\n\
+client_max_body_size 1G;\n\
 proxy_read_timeout 36000s;\n\
 proxy_redirect off;\n"\
 >> proxy-headers.conf
